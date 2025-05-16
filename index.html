@@ -233,7 +233,6 @@
         #eGateButton:hover {
             transform: scale(1.05);
         }
-        /* Popup Styles */
         #firstVisitPopup {
             display: none;
             position: fixed;
@@ -320,7 +319,6 @@
             <div class="bus-emoji" id="busEmoji">🚌</div>
         </div>
         <div class="button-container">
-            <button id="toggleRoute">🔄</button>
             <button id="eGateButton">eGate</button>
         </div>
         <div class="input-container">
@@ -333,7 +331,6 @@
     <div id="celestialBody">☀️</div>
     <div class="stars-container" id="starsContainer"></div>
 
-    <!-- Popup for first visit -->
     <div id="firstVisitPopup">
         <h2>Add to Home Screen</h2>
         <p>To install this app on your iPhone:</p>
@@ -531,21 +528,6 @@
                 starsContainer.appendChild(star);
             }
         }
-
-        document.getElementById('toggleRoute').addEventListener('click', function() {
-            isMasdarToCBC = !isMasdarToCBC;
-            const routeTitle = document.getElementById('routeTitle');
-            const toggleButton = document.getElementById('toggleRoute');
-            
-            if (isMasdarToCBC) {
-                routeTitle.textContent = "Masdar 2 to CBC in";
-                toggleButton.textContent = "🔄";
-            } else {
-                routeTitle.textContent = "CBC to Masdar 2 in";
-                toggleButton.textContent = "🔄";
-            }
-            updateCountdown();
-        });
 
         function findClosestBusTimes(inputTime) {
             const [inputHours, inputMinutes] = inputTime.split(':').map(Number);
