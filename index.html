@@ -66,23 +66,6 @@
             object-fit: scale-down;
             object-position: center;
         }
-        .gif-overlay {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 100%;
-            max-width: 100%;
-            height: 100%;
-            z-index: 10;
-            display: none;
-            pointer-events: none;
-        }
-        .gif-overlay img {
-            width: 100%;
-            height: auto;
-            object-fit: cover;
-        }
         .container {
             text-align: center;
             background-color: rgba(255, 255, 255, 0.9);
@@ -349,9 +332,6 @@
         </div>
         <div id="closestTimes"></div>
     </div>
-    <div class="gif-overlay" id="gifOverlay">
-        <img src="https://www.icegif.com/wp-content/uploads/2023/08/icegif-588.gif" alt="Hurry Up GIF">
-    </div>
     <div id="celestialBody">☀️</div>
     <div class="stars-container" id="starsContainer"></div>
 
@@ -373,6 +353,7 @@
         </ul>
         <button id="closePopup">Close</button>
     </div>
+
     <script>
     let isMasdarToCBC = true;
     let starsCreated = false;
@@ -525,59 +506,49 @@
 }
 
         function updateCountdown() {
-    const now = new Date();
-    const currentTimeInMinutes = now.getHours() * 60 + now.getMinutes() + (now.getSeconds() + now.getMilliseconds() / 1000) / 60;
-    const { previousBus, nextBus } = getBusTimes();
-    let timeDifference = nextBus.minutes - currentTimeInMinutes;
+            const now = new Date();
+            const currentTimeInMinutes = now.getHours() * 60 + now.getMinutes() + (now.getSeconds() + now.getMilliseconds() / 1000) / 60;
+            const { previousBus, nextBus } = getBusTimes();
+            let timeDifference = nextBus.minutes - currentTimeInMinutes;
 
-    if (timeDifference < 0) {
-        timeDifference += 1440;
-    }
+            if (timeDifference < 0) {
+                timeDifference += 1440;
+            }
 
-    const minutes = Math.floor(timeDifference % 60);
-    const seconds = Math.floor((timeDifference * 60) % 60);
+            const minutes = Math.floor(timeDifference % 60);
+            const seconds = Math.floor((timeDifference * 60) % 60);
 
-    document.getElementById('countdown').textContent = 
-        `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-    document.getElementById('nextBus').textContent = `Next bus at ${nextBus.time}`;
+            document.getElementById('countdown').textContent = 
+                `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            document.getElementById('nextBus').textContent = `Next bus at ${nextBus.time}`;
 
-    const totalDuration = (nextBus.minutes - previousBus.minutes + 1440) % 1440;
-    const elapsed = (currentTimeInMinutes - previousBus.minutes + 1440) % 1440;
-    const percentage = (elapsed / totalDuration) * 100;
-    const busPosition = Math.min(Math.max(percentage, 0), 100) * 2.76;
+            const totalDuration = (nextBus.minutes - previousBus.minutes + 1440) % 1440;
+            const elapsed = (currentTimeInMinutes - previousBus.minutes + 1440) % 1440;
+            const percentage = (elapsed / totalDuration) * 100;
+            const busPosition = Math.min(Math.max(percentage, 0), 100) * 2.76;
 
-    const progressFill = document.getElementById('progressFill');
-    progressFill.style.width = `${Math.min(Math.max(percentage, 0), 100)}%`;
+            const progressFill = document.getElementById('progressFill');
+            progressFill.style.width = `${Math.min(Math.max(percentage, 0), 100)}%`;
 
-    const remainingMinutes = timeDifference;
-    if (remainingMinutes <= 3 && remainingMinutes > 2.9167) {
-        progressFill.style.transition = 'background-color 5s linear';
-        progressFill.style.backgroundColor = 'rgb(255, 0, 0)';
-    } else if (remainingMinutes > 3) {
-        const startColor = 204;
-        const endColor = 51;
-        const colorValue = Math.round(startColor - (startColor - endColor) * (percentage / 100));
-        progressFill.style.backgroundColor = `rgb(${colorValue}, ${colorValue}, ${colorValue})`;
-        progressFill.style.transition = 'background-color 0.5s linear';
-    } else if (remainingMinutes <= 2.9167) {
-        progressFill.style.backgroundColor = 'rgb(255, 0, 0)';
-        progressFill.style.transition = 'none';
-    }
+            const remainingMinutes = timeDifference;
+            if (remainingMinutes <= 3 && remainingMinutes > 2.9167) {
+                progressFill.style.transition = 'background-color 5s linear';
+                progressFill.style.backgroundColor = 'rgb(255, 0, 0)';
+            } else if (remainingMinutes > 3) {
+                const startColor = 204;
+                const endColor = 51;
+                const colorValue = Math.round(startColor - (startColor - endColor) * (percentage / 100));
+                progressFill.style.backgroundColor = `rgb(${colorValue}, ${colorValue}, ${colorValue})`;
+                progressFill.style.transition = 'background-color 0.5s linear';
+            } else if (remainingMinutes <= 2.9167) {
+                progressFill.style.backgroundColor = 'rgb(255, 0, 0)';
+                progressFill.style.transition = 'none';
+            }
 
-    document.getElementById('busEmoji').style.left = `${busPosition}px`;
-    // Inserta el código del GIF aquí
-    const gifOverlay = document.getElementById('gifOverlay');
-    if (seconds === 3 && minutes === 0) {
-        gifOverlay.style.display = 'block';
-        setTimeout(() => {
-            gifOverlay.style.display = 'none';
-        }, 1000);
-    } else {
-        gifOverlay.style.display = 'none';
-    }
-    
-    updateSkyAndCelestial();
-}
+            document.getElementById('busEmoji').style.left = `${busPosition}px`;
+            
+            updateSkyAndCelestial();
+        }
 
         function createStars() {
             const starsContainer = document.getElementById('starsContainer');
