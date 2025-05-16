@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Masdar F</title>
+    <title>Masdar 2</title>
     <link rel="apple-touch-icon" href="https://i.imghippo.com/files/tEG3031vlA.png">
     <link rel="apple-touch-startup-image" href="https://example.com/splash.png">
     <style>
@@ -57,9 +57,9 @@
             left: 50%;
             transform: translateX(-50%);
             z-index: 3;
-            width: 170px;
-            height: 60px;
-            object-fit: cover;
+            width: 120px;
+            height: 45px;
+            object-fit: scale-down;
             object-position: center;
             opacity: 0.9;
             border-radius: 10px;
@@ -279,9 +279,9 @@
             text-align: center;
         }
         #firstVisitPopup .icon {
-            height: 1em; /* Ajusta la altura al tamaño de la línea de texto */
-            margin-right: 8px; /* Espaciado ajustado */
-            vertical-align: middle; /* Alineación vertical con el texto */
+            height: 1em;
+            margin-right: 8px;
+            vertical-align: middle;
         }
         #closePopup {
             padding: 5px 15px;
@@ -359,41 +359,42 @@
     </div>
 
     <script>
-        let isMasdarToCBC = true;
-        let starsCreated = false;
+    let isMasdarToCBC = true;
+    let starsCreated = false;
 
-        const masdarToCBCSchedule = [
-            { masdar: "00:43", cbc: "01:03" }, { masdar: "01:03", cbc: "01:23" }, { masdar: "01:23", cbc: "01:43" },
-            { masdar: "01:43", cbc: "02:03" }, { masdar: "02:03", cbc: "02:23" }, { masdar: "02:23", cbc: "02:43" },
-            { masdar: "02:53", cbc: "03:13" }, { masdar: "03:23", cbc: "03:43" }, { masdar: "03:53", cbc: "04:13" },
-            { masdar: "04:23", cbc: "04:43" }, { masdar: "04:48", cbc: "05:08" }, { masdar: "05:08", cbc: "05:28" },
-            { masdar: "05:28", cbc: "05:48" }, { masdar: "05:53", cbc: "06:13" }, { masdar: "06:13", cbc: "06:33" },
-            { masdar: "06:33", cbc: "06:53" }, { masdar: "06:53", cbc: "07:13" }, { masdar: "07:13", cbc: "07:33" },
-            { masdar: "07:38", cbc: "07:58" }, { masdar: "08:03", cbc: "08:23" }, { masdar: "08:28", cbc: "08:48" },
-            { masdar: "08:53", cbc: "09:13" }, { masdar: "09:18", cbc: "09:38" }, { masdar: "09:48", cbc: "10:08" },
-            { masdar: "10:13", cbc: "10:33" }, { masdar: "10:38", cbc: "10:58" }, { masdar: "11:03", cbc: "11:23" },
-            { masdar: "11:28", cbc: "11:48" }, { masdar: "11:53", cbc: "12:13" }, { masdar: "12:18", cbc: "12:38" },
-            { masdar: "12:38", cbc: "12:58" }, { masdar: "12:58", cbc: "13:18" }, { masdar: "13:18", cbc: "13:38" },
-            { masdar: "13:38", cbc: "13:58" }, { masdar: "13:58", cbc: "14:18" }, { masdar: "14:18", cbc: "14:38" },
-            { masdar: "14:43", cbc: "15:03" }, { masdar: "15:08", cbc: "15:28" }, { masdar: "15:33", cbc: "15:53" },
-            { masdar: "15:58", cbc: "16:18" }, { masdar: "16:23", cbc: "16:43" }, { masdar: "16:48", cbc: "17:08" },
-            { masdar: "17:17", cbc: "17:39" }, { masdar: "17:42", cbc: "18:04" }, { masdar: "18:07", cbc: "18:32" },
-            { masdar: "18:32", cbc: "18:57" }, { masdar: "18:57", cbc: "19:22" }, { masdar: "19:22", cbc: "19:47" },
-            { masdar: "19:47", cbc: "20:12" }, { masdar: "20:12", cbc: "20:34" }, { masdar: "20:37", cbc: "20:59" },
-            { masdar: "21:00", cbc: "21:20" }, { masdar: "21:23", cbc: "21:43" }, { masdar: "21:48", cbc: "22:08" },
-            { masdar: "22:13", cbc: "22:33" }, { masdar: "22:38", cbc: "22:58" }, { masdar: "23:03", cbc: "23:23" },
-            { masdar: "23:28", cbc: "23:48" }, { masdar: "23:53", cbc: "00:13" }, { masdar: "00:18", cbc: "00:38" }
-        ];
+    const masdarToCBCSchedule = [
+        { masdar: "00:00", cbc: "00:15" }, { masdar: "00:20", cbc: "00:35" }, { masdar: "00:40", cbc: "00:55" },
+        { masdar: "01:00", cbc: "01:15" }, { masdar: "01:20", cbc: "01:35" }, { masdar: "01:40", cbc: "01:55" },
+        { masdar: "02:00", cbc: "02:15" }, { masdar: "02:30", cbc: "02:45" }, { masdar: "03:00", cbc: "03:15" },
+        { masdar: "03:30", cbc: "03:45" }, { masdar: "04:00", cbc: "04:15" }, { masdar: "04:30", cbc: "04:45" },
+        { masdar: "05:00", cbc: "05:15" }, { masdar: "05:20", cbc: "05:35" }, { masdar: "05:40", cbc: "05:55" },
+        { masdar: "06:00", cbc: "06:15" }, { masdar: "06:20", cbc: "06:35" }, { masdar: "06:40", cbc: "06:55" },
+        { masdar: "07:00", cbc: "07:15" }, { masdar: "07:20", cbc: "07:35" }, { masdar: "07:40", cbc: "07:55" },
+        { masdar: "08:00", cbc: "08:15" }, { masdar: "08:20", cbc: "08:35" }, { masdar: "08:40", cbc: "08:55" },
+        { masdar: "09:00", cbc: "09:15" }, { masdar: "09:30", cbc: "09:45" }, { masdar: "10:00", cbc: "10:15" },
+        { masdar: "10:30", cbc: "10:45" }, { masdar: "11:00", cbc: "11:15" }, { masdar: "11:30", cbc: "11:45" },
+        { masdar: "12:00", cbc: "12:15" }, { masdar: "12:30", cbc: "12:45" }, { masdar: "13:00", cbc: "13:15" },
+        { masdar: "13:30", cbc: "13:45" }, { masdar: "14:00", cbc: "14:15" }, { masdar: "14:30", cbc: "14:45" },
+        { masdar: "15:00", cbc: "15:15" }, { masdar: "15:30", cbc: "15:45" }, { masdar: "16:00", cbc: "16:15" },
+        { masdar: "16:30", cbc: "16:45" }, { masdar: "17:00", cbc: "17:15" }, { masdar: "17:20", cbc: "17:35" },
+        { masdar: "17:40", cbc: "17:55" }, { masdar: "18:00", cbc: "18:15" }, { masdar: "18:20", cbc: "18:35" },
+        { masdar: "18:40", cbc: "18:55" }, { masdar: "19:00", cbc: "19:15" }, { masdar: "19:20", cbc: "19:35" },
+        { masdar: "19:40", cbc: "19:55" }, { masdar: "20:00", cbc: "20:15" }, { masdar: "20:20", cbc: "20:35" },
+        { masdar: "20:40", cbc: "20:55" }, { masdar: "21:00", cbc: "21:15" }, { masdar: "21:20", cbc: "21:35" },
+        { masdar: "21:40", cbc: "21:55" }, { masdar: "22:00", cbc: "22:15" }, { masdar: "22:20", cbc: "22:35" },
+        { masdar: "22:40", cbc: "22:55" }, { masdar: "23:00", cbc: "23:15" }, { masdar: "23:20", cbc: "23:35" },
+        { masdar: "23:40", cbc: "23:55" }
+    ];
 
-        const cbcToMasdarSchedule = [
-            "00:15", "00:35", "00:55", "01:15", "01:35", "01:55", "02:25", "02:55", "03:25", "03:55", 
-            "04:20", "04:40", "05:00", "05:25", "05:45", "06:05", "06:25", "06:45", "07:10", "07:35", 
-            "08:00", "08:25", "08:50", "09:20", "09:45", "10:10", "10:35", "11:00", "11:25", "11:50", 
-            "12:10", "12:30", "12:50", "13:10", "13:30", "13:50", "14:15", "14:40", "15:05", "15:30", 
-            "15:55", "16:20", "16:45", "17:10", "17:35", "18:00", "18:25", "18:50", "19:15", "19:40", 
-            "20:05", "20:30", "20:55", "21:20", "21:45", "22:10", "22:35", "23:00", "23:25", "23:50"
-        ];
-
+    const cbcToMasdarSchedule = [
+        "00:15", "00:35", "00:55", "01:15", "01:35", "01:55", "02:15", "02:45", "03:15", "03:45",
+        "04:15", "04:45", "05:15", "05:35", "05:55", "06:15", "06:35", "06:55", "07:15", "07:35",
+        "07:55", "08:15", "08:35", "08:55", "09:15", "09:45", "10:15", "10:45", "11:15", "11:45",
+        "12:15", "12:45", "13:15", "13:45", "14:15", "14:45", "15:15", "15:45", "16:15", "16:45",
+        "17:15", "17:35", "17:55", "18:15", "18:35", "18:55", "19:15", "19:35", "19:55", "20:15",
+        "20:35", "20:55", "21:15", "21:35", "21:55", "22:15", "22:35", "22:55", "23:15", "23:35",
+        "23:55"
+    ];
 
         function getBusTimes() {
             const currentSchedule = isMasdarToCBC ? masdarToCBCSchedule.map(item => item.masdar) : cbcToMasdarSchedule;
@@ -945,14 +946,12 @@
     </script>
     <svg class="dune" viewBox="0 0 1000 250" preserveAspectRatio="none">
     <defs>
-        <!-- Gradiente para la textura de la duna -->
         <linearGradient id="duneGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" style="stop-color:#f4e4bc;stop-opacity:1" /> <!-- Arena clara en la cima -->
-            <stop offset="50%" style="stop-color:#edc9af;stop-opacity:1" /> <!-- Tono medio -->
-            <stop offset="100%" style="stop-color:#d2a679;stop-opacity:0.8" /> <!-- Sombra en la base -->
+            <stop offset="0%" style="stop-color:#f4e4bc;stop-opacity:1" />
+            <stop offset="50%" style="stop-color:#edc9af;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#d2a679;stop-opacity:0.8" />
         </linearGradient>
     </defs>
-    <!-- Curva de la duna con forma orgánica -->
     <path class="dune-gradient" d="
     M0,250
     C120,225 320,130 430,80
