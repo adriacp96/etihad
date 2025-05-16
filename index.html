@@ -36,6 +36,7 @@
             background-size: cover;
             background-attachment: fixed;
             z-index: 0;
+            transition: background 5s ease;
         }
         body {
             font-family: "Etihad Altis Book Book";
@@ -415,53 +416,94 @@
         }
 
         function updateSkyAndCelestial() {
-            const now = new Date();
-            const hours = now.getHours();
-            const minutes = now.getMinutes();
-            const totalMinutes = hours * 60 + minutes;
+    const now = new Date();
+    const hours = now.getHours();
+    const minutes = now.getMinutes();
+    const totalMinutes = hours * 60 + minutes;
 
-            const celestial = document.getElementById('celestialBody');
-            const starsContainer = document.getElementById('starsContainer');
-            let gradient;
+    const celestial = document.getElementById('celestialBody');
+    const starsContainer = document.getElementById('starsContainer');
+    let gradient;
 
-            const dayLength = 12 * 60;
-            const sunrise = 6 * 60;
-            const sunset = 18 * 60;
-            const moonrise = sunset;
-            const moonset = sunrise + 1440;
+    // Define time periods (in minutes since midnight)
+    const sunriseStart = 5 * 60; // 5:00 AM
+    const sunriseEnd = 7 * 60; // 7:00 AM
+    const dayEnd = 17 * 60; // 5:00 PM
+    const sunsetEnd = 19 * 60; // 7:00 PM
+    const dayLength = 12 * 60; // For celestial movement
 
-            const isDay = totalMinutes >= sunrise && totalMinutes < sunset;
-            if (isDay) {
-                gradient = 'linear-gradient(to bottom, #87cefa, #4682b4)';
-                celestial.textContent = '☀️';
-                starsContainer.style.display = 'none';
-            } else {
-                gradient = 'linear-gradient(to bottom, #191970, #000080)';
-                celestial.textContent = '🌙';
-                starsContainer.style.display = 'block';
-                if (!starsCreated) {
-                    createStars();
-                    starsCreated = true;
-                }
-            }
-            document.getElementById('background-container').style.background = gradient;
+    // Helper function to interpolate between two colors
+    function interpolateColor(color1, color2, factor) {
+        const result = color1.slice(1).match(/.{2}/g).map((hex, i) => {
+            const c1 = parseInt(hex, 16);
+            const c2 = parseInt(color2.slice(1).match(/.{2}/g)[i], 16);
+            const value = Math.round(c1 + (c2 - c1) * factor);
+            return value.toString(16).padStart(2, '0');
+        });
+        return `#${result.join('')}`;
+    }
 
-            let progress;
-            if (isDay) {
-                progress = (totalMinutes - sunrise) / dayLength;
-            } else {
-                const adjustedMinutes = totalMinutes < sunrise ? totalMinutes + 1440 : totalMinutes;
-                progress = (adjustedMinutes - moonrise) / dayLength;
-            }
-            progress = Math.max(0, Math.min(1, progress));
-
-            const xPos = 5 + progress * 90;
-            const yPos = 90 - 80 * 4 * progress * (1 - progress);
-
-            celestial.style.left = `${xPos}vw`;
-            celestial.style.top = `${yPos}vh`;
-            celestial.style.display = 'block';
+    // Determine time period and set gradient
+    if (totalMinutes >= sunriseStart && totalMinutes < sunriseEnd) {
+        // Sunrise: Warm orange, pink, yellow
+        const factor = (totalMinutes - sunriseStart) / (sunriseEnd - sunriseStart);
+        const topColor = interpolateColor('#ff4500', '#ffd700', factor); // Orange to yellow
+        const bottomColor = interpolateColor('#ff69b4', '#87ceeb', factor); // Pink to light blue
+        gradient = `linear-gradient(to bottom, ${topColor}, ${bottomColor})`;
+        celestial.textContent = '☀️';
+        starsContainer.style.display = 'none';
+    } else if (totalMinutes >= sunriseEnd && totalMinutes < dayEnd) {
+        // Daytime: Bright blue tones
+        const factor = (totalMinutes - sunriseEnd) / (dayEnd - sunriseEnd);
+        const topColor = interpolateColor('#87ceeb', '#4682b4', factor); // Light to medium blue
+        const bottomColor = interpolateColor('#b0e0e6', '#1e90ff', factor); // Cyan to deep blue
+        gradient = `linear-gradient(to bottom, ${topColor}, ${bottomColor})`;
+        celestial.textContent = '☀️';
+        starsContainer.style.display = 'none';
+    } else if (totalMinutes >= dayEnd && totalMinutes < sunsetEnd) {
+        // Sunset: Reddish, golden, purple
+        const factor = (totalMinutes - dayEnd) / (sunsetEnd - dayEnd);
+        const topColor = interpolateColor('#ffd700', '#ff4500', factor); // Yellow to orange-red
+        const bottomColor = interpolateColor('#ff8c00', '#4b0082', factor); // Orange to indigo
+        gradient = `linear-gradient(to bottom, ${topColor}, ${bottomColor})`;
+        celestial.textContent = '☀️';
+        starsContainer.style.display = 'none';
+    } else {
+        // Night: Deep blue and indigo
+        const factor = ((totalMinutes < sunriseStart ? totalMinutes + 1440 : totalMinutes) - sunsetEnd) / (sunriseStart + 1440 - sunsetEnd);
+        const topColor = interpolateColor('#191970', '#000033', factor); // Midnight blue to darker blue
+        const bottomColor = interpolateColor('#000080', '#1c2526', factor); // Navy to dark teal
+        gradient = `linear-gradient(to bottom, ${topColor}, ${bottomColor})`;
+        celestial.textContent = '🌙';
+        starsContainer.style.display = 'block';
+        if (!starsCreated) {
+            createStars();
+            starsCreated = true;
         }
+    }
+
+    // Apply gradient with smooth transition
+    const backgroundContainer = document.getElementById('background-container');
+    backgroundContainer.style.transition = 'background 5s ease';
+    backgroundContainer.style.background = gradient;
+
+    // Update celestial body position
+    let progress;
+    if (totalMinutes >= sunriseStart && totalMinutes < sunsetEnd) {
+        progress = (totalMinutes - sunriseStart) / (sunsetEnd - sunriseStart);
+    } else {
+        const adjustedMinutes = totalMinutes < sunriseStart ? totalMinutes + 1440 : totalMinutes;
+        progress = (adjustedMinutes - sunsetEnd) / (sunriseStart + 1440 - sunsetEnd);
+    }
+    progress = Math.max(0, Math.min(1, progress));
+
+    const xPos = 5 + progress * 90;
+    const yPos = 90 - 80 * 4 * progress * (1 - progress);
+
+    celestial.style.left = `${xPos}vw`;
+    celestial.style.top = `${yPos}vh`;
+    celestial.style.display = 'block';
+}
 
         function updateCountdown() {
             const now = new Date();
