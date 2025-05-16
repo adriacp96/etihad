@@ -363,26 +363,26 @@
         let starsCreated = false;
 
         const masdarToCBCSchedule = [
-            { gros: "00:43", hq: "01:03" }, { gros: "01:03", hq: "01:23" }, { gros: "01:23", hq: "01:43" },
-            { gros: "01:43", hq: "02:03" }, { gros: "02:03", hq: "02:23" }, { gros: "02:23", hq: "02:43" },
-            { gros: "02:53", hq: "03:13" }, { gros: "03:23", hq: "03:43" }, { gros: "03:53", hq: "04:13" },
-            { gros: "04:23", hq: "04:43" }, { gros: "04:48", hq: "05:08" }, { gros: "05:08", hq: "05:28" },
-            { gros: "05:28", hq: "05:48" }, { gros: "05:53", hq: "06:13" }, { gros: "06:13", hq: "06:33" },
-            { gros: "06:33", hq: "06:53" }, { gros: "06:53", hq: "07:13" }, { gros: "07:13", hq: "07:33" },
-            { gros: "07:38", hq: "07:58" }, { gros: "08:03", hq: "08:23" }, { gros: "08:28", hq: "08:48" },
-            { gros: "08:53", hq: "09:13" }, { gros: "09:18", hq: "09:38" }, { gros: "09:48", hq: "10:08" },
-            { gros: "10:13", hq: "10:33" }, { gros: "10:38", hq: "10:58" }, { gros: "11:03", hq: "11:23" },
-            { gros: "11:28", hq: "11:48" }, { gros: "11:53", hq: "12:13" }, { gros: "12:18", hq: "12:38" },
-            { gros: "12:38", hq: "12:58" }, { gros: "12:58", hq: "13:18" }, { gros: "13:18", hq: "13:38" },
-            { gros: "13:38", hq: "13:58" }, { gros: "13:58", hq: "14:18" }, { gros: "14:18", hq: "14:38" },
-            { gros: "14:43", hq: "15:03" }, { gros: "15:08", hq: "15:28" }, { gros: "15:33", hq: "15:53" },
-            { gros: "15:58", hq: "16:18" }, { gros: "16:23", hq: "16:43" }, { gros: "16:48", hq: "17:08" },
-            { gros: "17:17", hq: "17:39" }, { gros: "17:42", hq: "18:04" }, { gros: "18:07", hq: "18:32" },
-            { gros: "18:32", hq: "18:57" }, { gros: "18:57", hq: "19:22" }, { gros: "19:22", hq: "19:47" },
-            { gros: "19:47", hq: "20:12" }, { gros: "20:12", hq: "20:34" }, { gros: "20:37", hq: "20:59" },
-            { gros: "21:00", hq: "21:20" }, { gros: "21:23", hq: "21:43" }, { gros: "21:48", hq: "22:08" },
-            { gros: "22:13", hq: "22:33" }, { gros: "22:38", hq: "22:58" }, { gros: "23:03", hq: "23:23" },
-            { gros: "23:28", hq: "23:48" }, { gros: "23:53", hq: "00:13" }, { gros: "00:18", hq: "00:38" }
+            { masdar: "00:43", cbc: "01:03" }, { masdar: "01:03", cbc: "01:23" }, { masdar: "01:23", cbc: "01:43" },
+            { masdar: "01:43", cbc: "02:03" }, { masdar: "02:03", cbc: "02:23" }, { masdar: "02:23", cbc: "02:43" },
+            { masdar: "02:53", cbc: "03:13" }, { masdar: "03:23", cbc: "03:43" }, { masdar: "03:53", cbc: "04:13" },
+            { masdar: "04:23", cbc: "04:43" }, { masdar: "04:48", cbc: "05:08" }, { masdar: "05:08", cbc: "05:28" },
+            { masdar: "05:28", cbc: "05:48" }, { masdar: "05:53", cbc: "06:13" }, { masdar: "06:13", cbc: "06:33" },
+            { masdar: "06:33", cbc: "06:53" }, { masdar: "06:53", cbc: "07:13" }, { masdar: "07:13", cbc: "07:33" },
+            { masdar: "07:38", cbc: "07:58" }, { masdar: "08:03", cbc: "08:23" }, { masdar: "08:28", cbc: "08:48" },
+            { masdar: "08:53", cbc: "09:13" }, { masdar: "09:18", cbc: "09:38" }, { masdar: "09:48", cbc: "10:08" },
+            { masdar: "10:13", cbc: "10:33" }, { masdar: "10:38", cbc: "10:58" }, { masdar: "11:03", cbc: "11:23" },
+            { masdar: "11:28", cbc: "11:48" }, { masdar: "11:53", cbc: "12:13" }, { masdar: "12:18", cbc: "12:38" },
+            { masdar: "12:38", cbc: "12:58" }, { masdar: "12:58", cbc: "13:18" }, { masdar: "13:18", cbc: "13:38" },
+            { masdar: "13:38", cbc: "13:58" }, { masdar: "13:58", cbc: "14:18" }, { masdar: "14:18", cbc: "14:38" },
+            { masdar: "14:43", cbc: "15:03" }, { masdar: "15:08", cbc: "15:28" }, { masdar: "15:33", cbc: "15:53" },
+            { masdar: "15:58", cbc: "16:18" }, { masdar: "16:23", cbc: "16:43" }, { masdar: "16:48", cbc: "17:08" },
+            { masdar: "17:17", cbc: "17:39" }, { masdar: "17:42", cbc: "18:04" }, { masdar: "18:07", cbc: "18:32" },
+            { masdar: "18:32", cbc: "18:57" }, { masdar: "18:57", cbc: "19:22" }, { masdar: "19:22", cbc: "19:47" },
+            { masdar: "19:47", cbc: "20:12" }, { masdar: "20:12", cbc: "20:34" }, { masdar: "20:37", cbc: "20:59" },
+            { masdar: "21:00", cbc: "21:20" }, { masdar: "21:23", cbc: "21:43" }, { masdar: "21:48", cbc: "22:08" },
+            { masdar: "22:13", cbc: "22:33" }, { masdar: "22:38", cbc: "22:58" }, { masdar: "23:03", cbc: "23:23" },
+            { masdar: "23:28", cbc: "23:48" }, { masdar: "23:53", cbc: "00:13" }, { masdar: "00:18", cbc: "00:38" }
         ];
 
         const cbcToMasdarSchedule = [
@@ -567,27 +567,27 @@
             const maxDelayMinutes = 50;
 
             const schedule = masdarToCBCSchedule.map(item => ({
-                gros: item.gros,
-                hq: item.hq,
-                grosMinutes: item.gros.split(':').map(Number)[0] * 60 + item.gros.split(':').map(Number)[1],
-                hqMinutes: item.hq.split(':').map(Number)[0] * 60 + item.hq.split(':').map(Number)[1]
+                masdar: item.masdar,
+                cbc: item.cbc,
+                masdarMinutes: item.masdar.split(':').map(Number)[0] * 60 + item.masdar.split(':').map(Number)[1],
+                cbcMinutes: item.cbc.split(':').map(Number)[0] * 60 + item.cbc.split(':').map(Number)[1]
             }));
 
             schedule.push({
-                gros: schedule[0].gros,
-                hq: schedule[0].hq,
-                grosMinutes: schedule[0].grosMinutes + 1440,
-                hqMinutes: schedule[0].hqMinutes + 1440
+                masdar: schedule[0].masdar,
+                cbc: schedule[0].cbc,
+                masdarMinutes: schedule[0].masdarMinutes + 1440,
+                cbcMinutes: schedule[0].cbcMinutes + 1440
             });
 
             const validTimes = schedule.filter(item => {
-                const diff = item.hqMinutes - targetTimeInMinutes;
+                const diff = item.cbcMinutes - targetTimeInMinutes;
                 return diff >= 0 && diff <= maxDelayMinutes;
             });
 
-            validTimes.sort((a, b) => a.grosMinutes - b.grosMinutes);
+            validTimes.sort((a, b) => a.masdarMinutes - b.masdarMinutes);
 
-            return validTimes.slice(0, 3).map(item => ({ gros: item.gros, hq: item.hq }));
+            return validTimes.slice(0, 3).map(item => ({ masdar: item.masdar, cbc: item.cbc }));
         }
 
         document.getElementById('playButton').addEventListener('click', function() {
@@ -615,7 +615,7 @@
                 closestTimesDiv.textContent = '';
                 closestTimesDiv.style.display = 'none';
             } else {
-                const result = closestTimes.map(item => `${item.gros} ➡️ ${item.hq}`).join(', ');
+                const result = closestTimes.map(item => `${item.masdar} ➡️ ${item.cbc}`).join(', ');
                 closestTimesDiv.textContent = result;
                 closestTimesDiv.style.display = 'block';
             }
