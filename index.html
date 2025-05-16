@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Masdar F</title>
+    <title>Masdar 2</title>
     <link rel="apple-touch-icon" href="https://i.imghippo.com/files/tEG3031vlA.png">
     <link rel="apple-touch-startup-image" href="https://example.com/splash.png">
     <style>
@@ -292,7 +292,6 @@
         #closePopup:hover {
             background-color: #34495e;
         }
-        /* Black background when popup is active */
         .black-background::before {
             content: '';
             position: fixed;
@@ -380,16 +379,6 @@
         { masdar: "21:40", cbc: "21:55" }, { masdar: "22:00", cbc: "22:15" }, { masdar: "22:20", cbc: "22:35" },
         { masdar: "22:40", cbc: "22:55" }, { masdar: "23:00", cbc: "23:15" }, { masdar: "23:20", cbc: "23:35" },
         { masdar: "23:40", cbc: "23:55" }
-    ];
-
-    const cbcToMasdarSchedule = [
-        "00:15", "00:35", "00:55", "01:15", "01:35", "01:55", "02:15", "02:45", "03:15", "03:45",
-        "04:15", "04:45", "05:15", "05:35", "05:55", "06:15", "06:35", "06:55", "07:15", "07:35",
-        "07:55", "08:15", "08:35", "08:55", "09:15", "09:45", "10:15", "10:45", "11:15", "11:45",
-        "12:15", "12:45", "13:15", "13:45", "14:15", "14:45", "15:15", "15:45", "16:15", "16:45",
-        "17:15", "17:35", "17:55", "18:15", "18:35", "18:55", "19:15", "19:35", "19:55", "20:15",
-        "20:35", "20:55", "21:15", "21:35", "21:55", "22:15", "22:35", "22:55", "23:15", "23:35",
-        "23:55"
     ];
 
         function getBusTimes() {
@@ -942,14 +931,12 @@
     </script>
     <svg class="dune" viewBox="0 0 1000 250" preserveAspectRatio="none">
     <defs>
-        <!-- Gradiente para la textura de la duna -->
         <linearGradient id="duneGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" style="stop-color:#f4e4bc;stop-opacity:1" /> <!-- Arena clara en la cima -->
-            <stop offset="50%" style="stop-color:#edc9af;stop-opacity:1" /> <!-- Tono medio -->
-            <stop offset="100%" style="stop-color:#d2a679;stop-opacity:0.8" /> <!-- Sombra en la base -->
+            <stop offset="0%" style="stop-color:#f4e4bc;stop-opacity:1" />
+            <stop offset="50%" style="stop-color:#edc9af;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#d2a679;stop-opacity:0.8" />
         </linearGradient>
     </defs>
-    <!-- Curva de la duna con forma orgánica -->
     <path class="dune-gradient" d="
     M0,250
     C120,225 320,130 430,80
