@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Masdar F</title>
+    <link rel="apple-touch-icon" href="https://i.imghippo.com/files/tEG3031vlA.png">
+    <link rel="apple-touch-startup-image" href="https://example.com/splash.png">
+    <style>
+        @font-face {
+            font-family: 'Emirates Bold';
+            src: url('https://c.ekstatic.net/shared/fonts/emirates/emirates-bold-v3.woff2') format('woff2');
+            font-weight: bold;
+            font-style: normal;
+        }
+
+        html {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        #background-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            min-height: 100vh;
+            background: linear-gradient(to bottom, #191970, #000080);
+            background-size: cover;
+            background-attachment: fixed;
+            z-index: 0;
+        }
+        body {
+            font-family: 'Emirates Bold', Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
+            box-sizing: border-box;
+        }
+        .etihad-logo {
+            position: absolute;
+            bottom: calc(20px + env(safe-area-inset-bottom));
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 3;
+            width: 170px;
+            height: 60px;
+            object-fit: cover;
+            object-position: center;
+            opacity: 0.9;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+            background-color: rgba(255, 255, 255, 0.256);
+        }
+        .container {
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+            z-index: 2;
+            position: relative;
+        }
+        #countdown {
+            font-size: 2.5em;
+            color: #2c3e50;
+            margin: 20px 0;
+        }
+        #nextBus {
+            font-size: 1.2em;
+            color: #7f8c8d;
+        }
+        .progress-container {
+            width: 300px;
+            margin: 20px auto;
+            position: relative;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background-color: #ddd;
+            border-radius: 5px;
+            position: relative;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            width: 0;
+            background-color: #ccc;
+            border-radius: 5px;
+            transition: width 0.5s linear, background-color 0.5s linear;
+        }
+        .bus-emoji {
+            font-size: 24px;
+            position: absolute;
+            top: -20px;
+            left: 0;
+            transform: scaleX(-1);
+            transition: left 0.5s linear;
+        }
+        .dune {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 25vh;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.5;
+        }
+        .dune-gradient {
+            fill: url(#duneGradient);
+        }
+        #celestialBody {
+            font-size: 60px;
+            position: absolute;
+            transition: none;
+            z-index: 1;
+            opacity: 1;
+            pointer-events: none;
+        }
+        .button-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        #toggleRoute {
+            padding: 0;
+            font-size: 24px;
+            background-color: transparent;
+            color: #2c3e50;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.3s;
+            width: 24px;
+            height: 24px;
+            line-height: 24px;
+            box-sizing: border-box;
+        }
+        #toggleRoute:hover {
+            transform: rotate(180deg);
+        }
+        .stars-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 75vh;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .star {
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            animation: fade 3s infinite;
+        }
+        @keyframes fade {
+            0% { opacity: 0.3; }
+            50% { opacity: 0.1; }
+            100% { opacity: 0.3; }
+        }
+        .input-container {
+            margin-top: 20px;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+        .input-container span {
+            font-family: 'Emirates Bold', sans-serif;
+            font-size: 1.2em;
+            color: #2c3e50;
+        }
+        #busTimeInput {
+            padding: 10px;
+            font-size: 1.2em;
+            border: 2px solid #2c3e50;
+            border-radius: 5px;
+            outline: none;
+            width: 120px;
+            text-align: center;
+            background-color: white;
+            color: #2c3e50;
+        }
+        #playButton {
+            padding: 5px 10px;
+            font-size: 1em;
+            background-color: #2c3e50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        #playButton:hover {
+            background-color: #34495e;
+        }
+        #closestTimes {
+            margin-top: 10px;
+            font-size: 1.1em;
+            color: #2c3e50;
+            display: none;
+        }
+        #eGateButton {
+            padding: 0 20px;
+            font-size: 1.2em;
+            font-family: 'Emirates Bold', sans-serif;
+            background: white;
+            color: #2c3e50;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.3s;
+            width: 100px;
+            height: 24px;
+            line-height: 24px;
+            box-sizing: border-box;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        #eGateButton:hover {
+            transform: scale(1.05);
+        }
+        /* Popup Styles */
+        #firstVisitPopup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+            z-index: 1000;
+            text-align: center;
+            max-width: 90%;
+            width: 300px;
+            color: #2c3e50;
+        }
+        #firstVisitPopup h2 {
+            margin: 0 0 15px 0;
+            font-size: 1.5em;
+            text-align: center;
+        }
+        #firstVisitPopup p {
+            margin: 0 0 15px 0;
+            font-size: 1em;
+            line-height: 1.4;
+            text-align: center;
+        }
+        #firstVisitPopup ul {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 15px 0;
+            text-align: center;
+        }
+        #firstVisitPopup li {
+            margin: 10px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        #firstVisitPopup .icon {
+            height: 1em; /* Ajusta la altura al tamaño de la línea de texto */
+            margin-right: 8px; /* Espaciado ajustado */
+            vertical-align: middle; /* Alineación vertical con el texto */
+        }
+        #closePopup {
+            padding: 5px 15px;
+            font-size: 1em;
+            background-color: #2c3e50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        #closePopup:hover {
+            background-color: #34495e;
+        }
+        /* Black background when popup is active */
+        .black-background::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 1);
+            z-index: 999;
+            transition: opacity 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div id="background-container"></div>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/0/0e/Etihad-airways-logo.svg" 
+         alt="Etihad Logo" class="etihad-logo">
+    <div class="container">
+        <h1 id="routeTitle">Masdar 2 to CBC in</h1>
+        <div id="countdown">00:00</div>
+        <div id="nextBus">Next bus at --:--</div>
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="bus-emoji" id="busEmoji">🚌</div>
+        </div>
+        <div class="button-container">
+            <button id="toggleRoute">🔄</button>
+            <button id="eGateButton">eGate</button>
+        </div>
+        <div class="input-container">
+            <span>eGate</span>
+            <input type="time" id="busTimeInput">
+            <button id="playButton">✕</button>
+        </div>
+        <div id="closestTimes"></div>
+    </div>
+    <div id="celestialBody">☀️</div>
+    <div class="stars-container" id="starsContainer"></div>
+
+    <!-- Popup for first visit -->
+    <div id="firstVisitPopup">
+        <h2>Add to Home Screen</h2>
+        <p>To install this app on your iPhone:</p>
+        <ul>
+            <li>
+                <img src="https://cdn-icons-png.flaticon.com/128/4855/4855052.png" alt="Share Icon" class="icon">
+                Tap the "Share" button in Safari
+            </li>
+            <li>
+                <img src="https://cdn-icons-png.flaticon.com/128/3161/3161837.png" alt="Add to Home Screen Icon" class="icon">
+                Select "Add to Home Screen"
+            </li>
+            <li>
+                Tap "Add" in the top-right corner
+            </li>
+        </ul>
+        <button id="closePopup">Close</button>
+    </div>
+
+    <script>
+        let isMasdarToCBC = true;
+        let starsCreated = false;
+
+        const masdarToCBCSchedule = [
+            { gros: "00:43", hq: "01:03" }, { gros: "01:03", hq: "01:23" }, { gros: "01:23", hq: "01:43" },
+            { gros: "01:43", hq: "02:03" }, { gros: "02:03", hq: "02:23" }, { gros: "02:23", hq: "02:43" },
+            { gros: "02:53", hq: "03:13" }, { gros: "03:23", hq: "03:43" }, { gros: "03:53", hq: "04:13" },
+            { gros: "04:23", hq: "04:43" }, { gros: "04:48", hq: "05:08" }, { gros: "05:08", hq: "05:28" },
+            { gros: "05:28", hq: "05:48" }, { gros: "05:53", hq: "06:13" }, { gros: "06:13", hq: "06:33" },
+            { gros: "06:33", hq: "06:53" }, { gros: "06:53", hq: "07:13" }, { gros: "07:13", hq: "07:33" },
+            { gros: "07:38", hq: "07:58" }, { gros: "08:03", hq: "08:23" }, { gros: "08:28", hq: "08:48" },
+            { gros: "08:53", hq: "09:13" }, { gros: "09:18", hq: "09:38" }, { gros: "09:48", hq: "10:08" },
+            { gros: "10:13", hq: "10:33" }, { gros: "10:38", hq: "10:58" }, { gros: "11:03", hq: "11:23" },
+            { gros: "11:28", hq: "11:48" }, { gros: "11:53", hq: "12:13" }, { gros: "12:18", hq: "12:38" },
+            { gros: "12:38", hq: "12:58" }, { gros: "12:58", hq: "13:18" }, { gros: "13:18", hq: "13:38" },
+            { gros: "13:38", hq: "13:58" }, { gros: "13:58", hq: "14:18" }, { gros: "14:18", hq: "14:38" },
+            { gros: "14:43", hq: "15:03" }, { gros: "15:08", hq: "15:28" }, { gros: "15:33", hq: "15:53" },
+            { gros: "15:58", hq: "16:18" }, { gros: "16:23", hq: "16:43" }, { gros: "16:48", hq: "17:08" },
+            { gros: "17:17", hq: "17:39" }, { gros: "17:42", hq: "18:04" }, { gros: "18:07", hq: "18:32" },
+            { gros: "18:32", hq: "18:57" }, { gros: "18:57", hq: "19:22" }, { gros: "19:22", hq: "19:47" },
+            { gros: "19:47", hq: "20:12" }, { gros: "20:12", hq: "20:34" }, { gros: "20:37", hq: "20:59" },
+            { gros: "21:00", hq: "21:20" }, { gros: "21:23", hq: "21:43" }, { gros: "21:48", hq: "22:08" },
+            { gros: "22:13", hq: "22:33" }, { gros: "22:38", hq: "22:58" }, { gros: "23:03", hq: "23:23" },
+            { gros: "23:28", hq: "23:48" }, { gros: "23:53", hq: "00:13" }, { gros: "00:18", hq: "00:38" }
+        ];
+
+        const cbcToMasdarSchedule = [
+            "00:15", "00:35", "00:55", "01:15", "01:35", "01:55", "02:25", "02:55", "03:25", "03:55", 
+            "04:20", "04:40", "05:00", "05:25", "05:45", "06:05", "06:25", "06:45", "07:10", "07:35", 
+            "08:00", "08:25", "08:50", "09:20", "09:45", "10:10", "10:35", "11:00", "11:25", "11:50", 
+            "12:10", "12:30", "12:50", "13:10", "13:30", "13:50", "14:15", "14:40", "15:05", "15:30", 
+            "15:55", "16:20", "16:45", "17:10", "17:35", "18:00", "18:25", "18:50", "19:15", "19:40", 
+            "20:05", "20:30", "20:55", "21:20", "21:45", "22:10", "22:35", "23:00", "23:25", "23:50"
+        ];
+
+
+        function getBusTimes() {
+            const currentSchedule = isMasdarToCBC ? masdarToCBCSchedule.map(item => item.masdar) : cbcToMasdarSchedule;
+            const now = new Date();
+            const currentTimeInMinutes = now.getHours() * 60 + now.getMinutes() + (now.getSeconds() + now.getMilliseconds() / 1000) / 60;
+            let previousBus = { time: currentSchedule[currentSchedule.length - 1], minutes: 0 };
+            let nextBus = { time: currentSchedule[0], minutes: 0 };
+
+            for (let i = 0; i < currentSchedule.length; i++) {
+                const [hours, minutes] = currentSchedule[i].split(':').map(Number);
+                const busTimeInMinutes = hours * 60 + minutes;
+
+                if (busTimeInMinutes > currentTimeInMinutes) {
+                    nextBus = { time: currentSchedule[i], minutes: busTimeInMinutes };
+                    previousBus = { 
+                        time: currentSchedule[i-1] || currentSchedule[currentSchedule.length-1], 
+                        minutes: (i-1 >= 0 ? currentSchedule[i-1] : currentSchedule[currentSchedule.length-1])
+                            .split(':').map(Number).reduce((h,m) => h*60 + m)
+                    };
+                    break;
+                }
+            }
+
+            if (!nextBus.minutes) {
+                nextBus = { time: currentSchedule[0], minutes: currentSchedule[0].split(':').map(Number)[0] * 60 + 
+                           currentSchedule[0].split(':').map(Number)[1] + 1440 };
+                previousBus = { time: currentSchedule[currentSchedule.length-1], 
+                              minutes: currentSchedule[currentSchedule.length-1].split(':').map(Number)[0] * 60 + 
+                              currentSchedule[currentSchedule.length-1].split(':').map(Number)[1] };
+            }
+
+            return { previousBus, nextBus };
+        }
+
+        function updateSkyAndCelestial() {
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            const totalMinutes = hours * 60 + minutes;
+
+            const celestial = document.getElementById('celestialBody');
+            const starsContainer = document.getElementById('starsContainer');
+            let gradient;
+
+            const dayLength = 12 * 60;
+            const sunrise = 6 * 60;
+            const sunset = 18 * 60;
+            const moonrise = sunset;
+            const moonset = sunrise + 1440;
+
+            const isDay = totalMinutes >= sunrise && totalMinutes < sunset;
+            if (isDay) {
+                gradient = 'linear-gradient(to bottom, #87cefa, #4682b4)';
+                celestial.textContent = '☀️';
+                starsContainer.style.display = 'none';
+            } else {
+                gradient = 'linear-gradient(to bottom, #191970, #000080)';
+                celestial.textContent = '🌙';
+                starsContainer.style.display = 'block';
+                if (!starsCreated) {
+                    createStars();
+                    starsCreated = true;
+                }
+            }
+            document.getElementById('background-container').style.background = gradient;
+
+            let progress;
+            if (isDay) {
+                progress = (totalMinutes - sunrise) / dayLength;
+            } else {
+                const adjustedMinutes = totalMinutes < sunrise ? totalMinutes + 1440 : totalMinutes;
+                progress = (adjustedMinutes - moonrise) / dayLength;
+            }
+            progress = Math.max(0, Math.min(1, progress));
+
+            const xPos = 5 + progress * 90;
+            const yPos = 90 - 80 * 4 * progress * (1 - progress);
+
+            celestial.style.left = `${xPos}vw`;
+            celestial.style.top = `${yPos}vh`;
+            celestial.style.display = 'block';
+        }
+
+        function updateCountdown() {
+            const now = new Date();
+            const currentTimeInMinutes = now.getHours() * 60 + now.getMinutes() + (now.getSeconds() + now.getMilliseconds() / 1000) / 60;
+            const { previousBus, nextBus } = getBusTimes();
+            let timeDifference = nextBus.minutes - currentTimeInMinutes;
+
+            if (timeDifference < 0) {
+                timeDifference += 1440;
+            }
+
+            const minutes = Math.floor(timeDifference % 60);
+            const seconds = Math.floor((timeDifference * 60) % 60);
+
+            document.getElementById('countdown').textContent = 
+                `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            document.getElementById('nextBus').textContent = `Next bus at ${nextBus.time}`;
+
+            const totalDuration = (nextBus.minutes - previousBus.minutes + 1440) % 1440;
+            const elapsed = (currentTimeInMinutes - previousBus.minutes + 1440) % 1440;
+            const percentage = (elapsed / totalDuration) * 100;
+            const busPosition = Math.min(Math.max(percentage, 0), 100) * 2.76;
+
+            const progressFill = document.getElementById('progressFill');
+            progressFill.style.width = `${Math.min(Math.max(percentage, 0), 100)}%`;
+
+            const remainingMinutes = timeDifference;
+            if (remainingMinutes <= 3 && remainingMinutes > 2.9167) {
+                progressFill.style.transition = 'background-color 5s linear';
+                progressFill.style.backgroundColor = 'rgb(255, 0, 0)';
+            } else if (remainingMinutes > 3) {
+                const startColor = 204;
+                const endColor = 51;
+                const colorValue = Math.round(startColor - (startColor - endColor) * (percentage / 100));
+                progressFill.style.backgroundColor = `rgb(${colorValue}, ${colorValue}, ${colorValue})`;
+                progressFill.style.transition = 'background-color 0.5s linear';
+            } else if (remainingMinutes <= 2.9167) {
+                progressFill.style.backgroundColor = 'rgb(255, 0, 0)';
+                progressFill.style.transition = 'none';
+            }
+
+            document.getElementById('busEmoji').style.left = `${busPosition}px`;
+            
+            updateSkyAndCelestial();
+        }
+
+        function createStars() {
+            const starsContainer = document.getElementById('starsContainer');
+            const numberOfStars = 50;
+
+            for (let i = 0; i < numberOfStars; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+
+                const x = Math.random() * 100;
+                const y = Math.random() * 75;
+                const size = Math.random() * 3 + 1;
+
+                star.style.left = `${x}vw`;
+                star.style.top = `${y}vh`;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+
+                const delay = Math.random() * 3;
+                star.style.animationDelay = `${delay}s`;
+
+                starsContainer.appendChild(star);
+            }
+        }
+
+        document.getElementById('toggleRoute').addEventListener('click', function() {
+            isMasdarToCBC = !isMasdarToCBC;
+            const routeTitle = document.getElementById('routeTitle');
+            const toggleButton = document.getElementById('toggleRoute');
+            
+            if (isMasdarToCBC) {
+                routeTitle.textContent = "Masdar 2 to CBC in";
+                toggleButton.textContent = "🔄";
+            } else {
+                routeTitle.textContent = "CBC to Masdar 2 in";
+                toggleButton.textContent = "🔄";
+            }
+            updateCountdown();
+        });
+
+        function findClosestBusTimes(inputTime) {
+            const [inputHours, inputMinutes] = inputTime.split(':').map(Number);
+            const targetTimeInMinutes = inputHours * 60 + inputMinutes;
+            const maxDelayMinutes = 50;
+
+            const schedule = masdarToCBCSchedule.map(item => ({
+                gros: item.gros,
+                hq: item.hq,
+                grosMinutes: item.gros.split(':').map(Number)[0] * 60 + item.gros.split(':').map(Number)[1],
+                hqMinutes: item.hq.split(':').map(Number)[0] * 60 + item.hq.split(':').map(Number)[1]
+            }));
+
+            schedule.push({
+                gros: schedule[0].gros,
+                hq: schedule[0].hq,
+                grosMinutes: schedule[0].grosMinutes + 1440,
+                hqMinutes: schedule[0].hqMinutes + 1440
+            });
+
+            const validTimes = schedule.filter(item => {
+                const diff = item.hqMinutes - targetTimeInMinutes;
+                return diff >= 0 && diff <= maxDelayMinutes;
+            });
+
+            validTimes.sort((a, b) => a.grosMinutes - b.grosMinutes);
+
+            return validTimes.slice(0, 3).map(item => ({ gros: item.gros, hq: item.hq }));
+        }
+
+        document.getElementById('playButton').addEventListener('click', function() {
+            document.querySelector('.input-container').style.display = 'none';
+            document.getElementById('closestTimes').style.display = 'none';
+            const eGateButton = document.getElementById('eGateButton');
+            eGateButton.style.display = 'inline-block';
+            eGateButton.style.width = '100px';
+            eGateButton.style.height = '24px';
+            eGateButton.style.background = 'white';
+        });
+
+        document.getElementById('busTimeInput').addEventListener('change', function() {
+            const input = document.getElementById('busTimeInput').value.trim();
+            const closestTimesDiv = document.getElementById('closestTimes');
+
+            if (!input) {
+                closestTimesDiv.textContent = '';
+                closestTimesDiv.style.display = 'none';
+                return;
+            }
+
+            const closestTimes = findClosestBusTimes(input);
+            if (closestTimes.length === 0) {
+                closestTimesDiv.textContent = '';
+                closestTimesDiv.style.display = 'none';
+            } else {
+                const result = closestTimes.map(item => `${item.gros} ➡️ ${item.hq}`).join(', ');
+                closestTimesDiv.textContent = result;
+                closestTimesDiv.style.display = 'block';
+            }
+        });
+
+        document.getElementById('eGateButton').addEventListener('click', function() {
+            document.getElementById('eGateButton').style.display = 'none';
+            document.querySelector('.input-container').style.display = 'flex';
+        });
+
+        // Popup logic with black background
+        function showFirstVisitPopup() {
+            const isPWA = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+            if (!localStorage.getItem('hasVisited') && !isPWA && isIOS) {
+                const popup = document.getElementById('firstVisitPopup');
+                popup.style.display = 'block';
+                document.body.classList.add('black-background');
+            }
+        }
+
+        document.getElementById('closePopup').addEventListener('click', function() {
+            const popup = document.getElementById('firstVisitPopup');
+            popup.style.display = 'none';
+            document.body.classList.remove('black-background');
+            localStorage.setItem('hasVisited', 'true');
+        });
+
+        window.onload = function() {
+            window.scrollTo(0, 0);
+            updateSkyAndCelestial();
+            updateCountdown();
+            showFirstVisitPopup();
+            const now = new Date();
+            if (now.getHours() < 6 || now.getHours() >= 18) {
+                createStars();
+            }
+        };
+
+        let intervalId = null;
+        function startUpdateLoop() {
+            if (intervalId) clearInterval(intervalId);
+            intervalId = setInterval(updateCountdown, 100);
+        }
+
+        startUpdateLoop();
+
+        document.body.addEventListener('touchmove', function(event) {
+            if (!event.target.closest('#events-container')) {
+                event.preventDefault();
+            }
+        }, { passive: false });
+
+        // Calendar JavaScript
+        const calendarWindow = document.getElementById('calendar-window');
+        const calendarTitleBar = document.getElementById('title-bar');
+        const calendarToggleDayButton = document.getElementById('toggle-day');
+        const calendarEventsList = document.getElementById('events-list');
+        const calendarCurrentDate = document.getElementById('current-date');
+        const calendarTitle = document.getElementById('title');
+
+        const calendarUrl = 'https://p108-caldav.icloud.com/published/2/MTUxMDYwNTYxNDE1MTA2MOcLt9DeC6aDOBzlZCUDejDdugx2IBT9HDhJA6jGIXwDHsR2_c0JH71EnIqBSkhBPTX-OE44UuANI0LecwDIOcg';
+
+        let isCalendarDragging = false;
+        let currentCalendarX;
+        let currentCalendarY;
+        let initialCalendarX;
+        let initialCalendarY;
+        let showingToday = true;
+
+        function initCalendarDraggable() {
+            calendarTitleBar.addEventListener('mousedown', startCalendarDragging);
+            document.addEventListener('mousemove', dragCalendar);
+            document.addEventListener('mouseup', stopCalendarDragging);
+            calendarTitleBar.addEventListener('touchstart', startCalendarDragging, { passive: false });
+            document.addEventListener('touchmove', dragCalendar, { passive: false });
+            document.addEventListener('touchend', stopCalendarDragging);
+            calendarToggleDayButton.addEventListener('click', toggleCalendarDay);
+        }
+
+        function startCalendarDragging(e) {
+            if (e.type === 'touchstart') {
+                e.preventDefault();
+            }
+            let clientX, clientY;
+            if (e.type === 'mousedown') {
+                clientX = e.clientX;
+                clientY = e.clientY;
+            } else if (e.type === 'touchstart' && e.touches.length === 1) {
+                clientX = e.touches[0].clientX;
+                clientY = e.touches[0].clientY;
+            } else {
+                return;
+            }
+            const rect = calendarWindow.getBoundingClientRect();
+            initialCalendarX = clientX - rect.left;
+            initialCalendarY = clientY - rect.top;
+            if (e.target === calendarTitleBar || e.target === calendarTitle) {
+                isCalendarDragging = true;
+                calendarWindow.style.cursor = 'move';
+                calendarWindow.style.transform = 'none';
+            }
+        }
+
+        function dragCalendar(e) {
+            if (isCalendarDragging) {
+                e.preventDefault();
+                let clientX, clientY;
+                if (e.type === 'mousemove') {
+                    clientX = e.clientX;
+                    clientY = e.clientY;
+                } else if (e.type === 'touchmove' && e.touches.length === 1) {
+                    clientX = e.touches[0].clientX;
+                    clientY = e.touches[0].clientY;
+                } else {
+                    return;
+                }
+                currentCalendarX = clientX - initialCalendarX;
+                currentCalendarY = clientY - initialCalendarY;
+                const maxX = window.innerWidth - calendarWindow.offsetWidth;
+                const maxY = window.innerHeight - calendarWindow.offsetHeight;
+                currentCalendarX = Math.min(Math.max(0, currentCalendarX), maxX);
+                currentCalendarY = Math.min(Math.max(0, currentCalendarY), maxY);
+                calendarWindow.style.left = currentCalendarX + 'px';
+                calendarWindow.style.top = currentCalendarY + 'px';
+            }
+        }
+
+        function stopCalendarDragging() {
+            if (isCalendarDragging) {
+                isCalendarDragging = false;
+                calendarWindow.style.cursor = 'default';
+            }
+        }
+
+        function updateCalendarDate() {
+            const dateElement = calendarCurrentDate;
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const date = showingToday ? new Date() : new Date(Date.now() + 24 * 60 * 60 * 1000);
+            dateElement.textContent = date.toLocaleDateString(navigator.language || 'en-US', options);
+            calendarTitle.textContent = showingToday ? "Today's Events" : "Tomorrow's Events";
+            calendarToggleDayButton.textContent = showingToday ? "Tomorrow ➡️" : "Today ⬅️";
+        }
+
+        function formatCalendarTime(date) {
+            if (!(date instanceof Date) || isNaN(date)) {
+                return 'Invalid time';
+            }
+            return date.toLocaleTimeString(navigator.language || 'en-US', {
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true
+            });
+        }
+
+        async function fetchCalendarEvents() {
+            calendarEventsList.innerHTML = '<div class="loading">Loading events...</div>';
+            try {
+                const proxyUrl = 'https://api.allorigins.win/raw?url=';
+                const response = await fetch(proxyUrl + encodeURIComponent(calendarUrl));
+                if (!response.ok) {
+                    throw new Error(`Network response was not ok: ${response.status} ${response.statusText}`);
+                }
+                const icsData = await response.text();
+                if (!icsData) {
+                    throw new Error('Empty response received');
+                }
+                const events = parseICS(icsData);
+                displayCalendarEvents(events);
+            } catch (error) {
+                console.error('Error fetching calendar:', error);
+                calendarEventsList.innerHTML = `<div class="loading">Unable to load events: ${error.message}</div>`;
+            }
+        }
+
+        function parseICS(icsData) {
+            const events = [];
+            const lines = icsData.replace(/\r\n/g, '\n').replace(/\r/g, '\n').split('\n');
+            let currentEvent = null;
+            let currentLine = '';
+            for (let i = 0; i < lines.length; i++) {
+                let line = lines[i];
+                if (line.startsWith(' ') || line.startsWith('\t')) {
+                    if (currentLine) {
+                        currentLine += line.substring(1);
+                    }
+                    continue;
+                } else {
+                    if (currentLine) {
+                        processICSLine(currentLine, currentEvent);
+                    }
+                    currentLine = line;
+                }
+                if (currentLine.toUpperCase() === 'BEGIN:VEVENT') {
+                    currentEvent = {};
+                    currentLine = '';
+                } else if (currentLine.toUpperCase() === 'END:VEVENT') {
+                    if (currentEvent && currentEvent.dtstart && currentEvent.summary) {
+                        if (!currentEvent.dtend && currentEvent.dtstartIsDate) {
+                            currentEvent.dtend = currentEvent.dtstart;
+                        }
+                        events.push(currentEvent);
+                    }
+                    currentEvent = null;
+                    currentLine = '';
+                }
+            }
+            if (currentLine) {
+                processICSLine(currentLine, currentEvent);
+            }
+            return events;
+        }
+
+        function processICSLine(line, eventObj) {
+            if (!eventObj || !line.includes(':')) return;
+            const [keyPart, ...valueParts] = line.split(':');
+            const value = valueParts.join(':');
+            const keyParts = keyPart.split(';');
+            const key = keyParts[0].toUpperCase();
+            if (key === 'DTSTART') {
+                const parsedDate = parseICSDate(value, keyPart);
+                eventObj.dtstart = parsedDate.date;
+                eventObj.dtstartIsDate = parsedDate.isDate;
+            } else if (key === 'DTEND') {
+                const parsedDate = parseICSDate(value, keyPart);
+                eventObj.dtend = parsedDate.date;
+                eventObj.dtendIsDate = parsedDate.isDate;
+            } else if (key === 'SUMMARY') {
+                eventObj.summary = value.replace(/\\,/g, ',').replace(/\\;/g, ';').replace(/\\n/g, '\n');
+            }
+        }
+
+        function parseICSDate(dateStr, keyPart) {
+            const isDateOnly = keyPart.toUpperCase().includes('VALUE=DATE');
+            const cleanStr = dateStr.replace('T', '').replace('Z', '');
+            const year = parseInt(cleanStr.substr(0, 4), 10);
+            const month = parseInt(cleanStr.substr(4, 2), 10) - 1;
+            const day = parseInt(cleanStr.substr(6, 2), 10);
+            if (isDateOnly) {
+                return { date: new Date(year, month, day), isDate: true };
+            } else {
+                const hour = parseInt(cleanStr.substr(8, 2) || '0', 10);
+                const minute = parseInt(cleanStr.substr(10, 2) || '0', 10);
+                const second = parseInt(cleanStr.substr(12, 2) || '0', 10);
+                if (dateStr.endsWith('Z')) {
+                    return { date: new Date(Date.UTC(year, month, day, hour, minute, second)), isDate: false };
+                } else {
+                    return { date: new Date(year, month, day, hour, minute, second), isDate: false };
+                }
+            }
+        }
+
+        function isCalendarDateSameDay(date, referenceDate) {
+            if (!(date instanceof Date) || isNaN(date)) {
+                return false;
+            }
+            const compareDate = new Date(date);
+            compareDate.setHours(0, 0, 0, 0);
+            const refDate = new Date(referenceDate);
+            refDate.setHours(0, 0, 0, 0);
+            return compareDate.getTime() === refDate.getTime();
+        }
+
+        function displayCalendarEvents(events) {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const tomorrow = new Date(today.getTime() + 24 * 60 * 60 * 1000);
+            const targetDate = showingToday ? today : tomorrow;
+            const filteredEvents = events.filter(event => event.dtstart && isCalendarDateSameDay(event.dtstart, targetDate));
+            if (filteredEvents.length === 0) {
+                calendarEventsList.innerHTML = '<div class="loading">No events scheduled</div>';
+                return;
+            }
+            filteredEvents.sort((a, b) => {
+                if (a.dtstartIsDate && !b.dtstartIsDate) return -1;
+                if (!a.dtstartIsDate && b.dtstartIsDate) return 1;
+                if (a.dtstartIsDate && b.dtstartIsDate) return 0;
+                return a.dtstart.getTime() - b.dtstart.getTime();
+            });
+            calendarEventsList.innerHTML = filteredEvents.map(event => {
+                let timeString = '';
+                if (event.dtstartIsDate) {
+                    timeString = 'All Day';
+                } else {
+                    timeString = formatCalendarTime(event.dtstart);
+                    if (event.dtend && !event.dtendIsDate && event.dtend.getTime() !== event.dtstart.getTime()) {
+                        timeString += ` - ${formatCalendarTime(event.dtend)}`;
+                    }
+                }
+                return `
+                    <div class="event">
+                        <div class="event-title">${event.summary || 'No Title'}</div>
+                        <div class="event-time">${timeString}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function toggleCalendarDay() {
+            const eventsList = calendarEventsList;
+            eventsList.classList.add(showingToday ? 'slide-out-left' : 'slide-out-right');
+            setTimeout(() => {
+                showingToday = !showingToday;
+                updateCalendarDate();
+                fetchCalendarEvents();
+                eventsList.classList.remove(showingToday ? 'slide-out-right' : 'slide-out-left');
+                eventsList.classList.add(showingToday ? 'slide-in-right' : 'slide-in-left');
+                setTimeout(() => {
+                    eventsList.classList.remove('slide-in-left', 'slide-in-right');
+                }, 500);
+            }, 500);
+        }
+
+        function startAutoCycle() {
+            setInterval(toggleCalendarDay, 10000);
+        }
+
+        initCalendarDraggable();
+        updateCalendarDate();
+        fetchCalendarEvents();
+        startAutoCycle();
+
+        setInterval(() => {
+            console.log("Updating calendar...");
+            fetchCalendarEvents();
+        }, 300000);
+    </script>
+    <svg class="dune" viewBox="0 0 1000 250" preserveAspectRatio="none">
+    <defs>
+        <!-- Gradiente para la textura de la duna -->
+        <linearGradient id="duneGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" style="stop-color:#f4e4bc;stop-opacity:1" /> <!-- Arena clara en la cima -->
+            <stop offset="50%" style="stop-color:#edc9af;stop-opacity:1" /> <!-- Tono medio -->
+            <stop offset="100%" style="stop-color:#d2a679;stop-opacity:0.8" /> <!-- Sombra en la base -->
+        </linearGradient>
+    </defs>
+    <!-- Curva de la duna con forma orgánica -->
+    <path class="dune-gradient" d="
+    M0,250
+    C120,225 320,130 430,80
+    C540,50 680,110 860,190
+    C930,220 1000,235 1000,250
+    L1000,250
+    L0,250
+    Z" />
+</svg>
+</body>
+</html>
