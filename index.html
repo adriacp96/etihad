@@ -67,14 +67,16 @@
             object-position: center;
         }
         .gif-overlay {
-            position: fixed;
+            position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 100vw;
-            height: auto;
-            z-index: 1001;
+            width: 100%;
+            max-width: 100%;
+            height: 100%;
+            z-index: 10;
             display: none;
+            pointer-events: none;
         }
         .gif-overlay img {
             width: 100%;
@@ -347,6 +349,9 @@
         </div>
         <div id="closestTimes"></div>
     </div>
+    <div class="gif-overlay" id="gifOverlay">
+        <img src="https://www.icegif.com/wp-content/uploads/2023/08/icegif-588.gif" alt="Hurry Up GIF">
+    </div>
     <div id="celestialBody">☀️</div>
     <div class="stars-container" id="starsContainer"></div>
 
@@ -367,9 +372,6 @@
             </li>
         </ul>
         <button id="closePopup">Close</button>
-    </div>
-    <div class="gif-overlay" id="gifOverlay">
-        <img src="https://www.icegif.com/wp-content/uploads/2023/08/icegif-588.gif" alt="Hurry Up GIF">
     </div>
     <script>
     let isMasdarToCBC = true;
