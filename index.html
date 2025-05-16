@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Masdar 2</title>
+    <title>Masdar F</title>
     <link rel="apple-touch-icon" href="https://i.imghippo.com/files/tEG3031vlA.png">
     <link rel="apple-touch-startup-image" href="https://example.com/splash.png">
     <style>
@@ -61,10 +61,6 @@
             height: 45px;
             object-fit: scale-down;
             object-position: center;
-            opacity: 0.9;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.3);
-            background-color: rgba(255, 255, 255, 0.256);
         }
         .container {
             text-align: center;
@@ -946,12 +942,14 @@
     </script>
     <svg class="dune" viewBox="0 0 1000 250" preserveAspectRatio="none">
     <defs>
+        <!-- Gradiente para la textura de la duna -->
         <linearGradient id="duneGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" style="stop-color:#f4e4bc;stop-opacity:1" />
-            <stop offset="50%" style="stop-color:#edc9af;stop-opacity:1" />
-            <stop offset="100%" style="stop-color:#d2a679;stop-opacity:0.8" />
+            <stop offset="0%" style="stop-color:#f4e4bc;stop-opacity:1" /> <!-- Arena clara en la cima -->
+            <stop offset="50%" style="stop-color:#edc9af;stop-opacity:1" /> <!-- Tono medio -->
+            <stop offset="100%" style="stop-color:#d2a679;stop-opacity:0.8" /> <!-- Sombra en la base -->
         </linearGradient>
     </defs>
+    <!-- Curva de la duna con forma orgánica -->
     <path class="dune-gradient" d="
     M0,250
     C120,225 320,130 430,80
