@@ -323,6 +323,7 @@
             <div class="bus-emoji" id="busEmoji">🚌</div>
         </div>
         <div class="button-container">
+            <button id="toggleRoute" aria-label="Toggle route" title="Toggle route">⇄</button>
             <button id="eGateButton">eGate</button>
         </div>
         <div class="input-container">
@@ -381,6 +382,13 @@
         { masdar: "22:40", cbc: "22:55" }, { masdar: "23:00", cbc: "23:15" }, { masdar: "23:20", cbc: "23:35" },
         { masdar: "23:40", cbc: "23:55" }
     ];
+
+    const cbcToMasdarSchedule = masdarToCBCSchedule.map(item => item.cbc);
+
+    function updateRouteUI() {
+        const routeTitle = document.getElementById('routeTitle');
+        routeTitle.textContent = isMasdarToCBC ? 'Masdar 2 to CBC in' : 'CBC to Masdar 2 in';
+    }
 
         function getBusTimes() {
             const currentSchedule = isMasdarToCBC ? masdarToCBCSchedule.map(item => item.masdar) : cbcToMasdarSchedule;
@@ -579,28 +587,32 @@
             const targetTimeInMinutes = inputHours * 60 + inputMinutes;
             const maxDelayMinutes = 50;
 
-            const schedule = masdarToCBCSchedule.map(item => ({
-                masdar: item.masdar,
-                cbc: item.cbc,
-                masdarMinutes: item.masdar.split(':').map(Number)[0] * 60 + item.masdar.split(':').map(Number)[1],
-                cbcMinutes: item.cbc.split(':').map(Number)[0] * 60 + item.cbc.split(':').map(Number)[1]
-            }));
+            const schedule = masdarToCBCSchedule.map(item => {
+                const from = isMasdarToCBC ? item.masdar : item.cbc;
+                const to = isMasdarToCBC ? item.cbc : item.masdar;
+                return {
+                    from,
+                    to,
+                    fromMinutes: from.split(':').map(Number)[0] * 60 + from.split(':').map(Number)[1],
+                    toMinutes: to.split(':').map(Number)[0] * 60 + to.split(':').map(Number)[1]
+                };
+            });
 
             schedule.push({
-                masdar: schedule[0].masdar,
-                cbc: schedule[0].cbc,
-                masdarMinutes: schedule[0].masdarMinutes + 1440,
-                cbcMinutes: schedule[0].cbcMinutes + 1440
+                from: schedule[0].from,
+                to: schedule[0].to,
+                fromMinutes: schedule[0].fromMinutes + 1440,
+                toMinutes: schedule[0].toMinutes + 1440
             });
 
             const validTimes = schedule.filter(item => {
-                const diff = item.cbcMinutes - targetTimeInMinutes;
+                const diff = item.toMinutes - targetTimeInMinutes;
                 return diff >= 0 && diff <= maxDelayMinutes;
             });
 
-            validTimes.sort((a, b) => a.masdarMinutes - b.masdarMinutes);
+            validTimes.sort((a, b) => a.fromMinutes - b.fromMinutes);
 
-            return validTimes.slice(0, 3).map(item => ({ masdar: item.masdar, cbc: item.cbc }));
+            return validTimes.slice(0, 3).map(item => ({ from: item.from, to: item.to }));
         }
 
         document.getElementById('playButton').addEventListener('click', function() {
@@ -628,10 +640,16 @@
                 closestTimesDiv.textContent = '';
                 closestTimesDiv.style.display = 'none';
             } else {
-                const result = closestTimes.map(item => `${item.masdar} ➡️ ${item.cbc}`).join(', ');
+                const result = closestTimes.map(item => `${item.from} ➡️ ${item.to}`).join(', ');
                 closestTimesDiv.textContent = result;
                 closestTimesDiv.style.display = 'block';
             }
+        });
+
+        document.getElementById('toggleRoute').addEventListener('click', function() {
+            isMasdarToCBC = !isMasdarToCBC;
+            updateRouteUI();
+            updateCountdown();
         });
 
         document.getElementById('eGateButton').addEventListener('click', function() {
@@ -659,6 +677,7 @@
 
         window.onload = function() {
             window.scrollTo(0, 0);
+            updateRouteUI();
             updateSkyAndCelestial();
             updateCountdown();
             showFirstVisitPopup();
