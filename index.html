@@ -11,12 +11,9 @@
     <style>
         @font-face {
             font-family: "Etihad Altis Book Book";
-            src: url("https://db.onlinewebfonts.com/t/febb3ad29181140b381ac49357890214.eot");
-            src: url("https://db.onlinewebfonts.com/t/febb3ad29181140b381ac49357890214.eot?#iefix") format("embedded-opentype"),
-                url("https://db.onlinewebfonts.com/t/febb3ad29181140b381ac49357890214.woff2") format("woff2"),
-                url("https://db.onlinewebfonts.com/t/febb3ad29181140b381ac49357890214.woff") format("woff"),
-                url("https://db.onlinewebfonts.com/t/febb3ad29181140b381ac49357890214.ttf") format("truetype"),
-                url("https://db.onlinewebfonts.com/t/febb3ad29181140b381ac49357890214.svg#Etihad Altis Book Book") format("svg");
+            src: url("assets/fonts/etihad-altis-book-book.woff2") format("woff2"),
+                url("assets/fonts/etihad-altis-book-book.woff") format("woff"),
+                url("assets/fonts/etihad-altis-book-book.ttf") format("truetype");
         }
 
         html {
@@ -60,7 +57,7 @@
             bottom: calc(20px + env(safe-area-inset-bottom));
             left: 50%;
             transform: translateX(-50%);
-            z-index: 3;
+            z-index: 5;
             width: 120px;
             height: 45px;
             object-fit: scale-down;
@@ -72,7 +69,7 @@
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0,0,0,0.3);
-            z-index: 2;
+            z-index: 4;
             position: relative;
         }
         #countdown {
@@ -118,7 +115,7 @@
             left: 0;
             width: 100%;
             height: 25vh;
-            z-index: 0;
+            z-index: 3;
             pointer-events: none;
             opacity: 0.5;
         }
@@ -129,7 +126,7 @@
             font-size: 60px;
             position: absolute;
             transition: none;
-            z-index: 1;
+            z-index: 2;
             opacity: 1;
             pointer-events: none;
         }
@@ -162,7 +159,7 @@
             left: 0;
             width: 100%;
             height: 75vh;
-            z-index: 0;
+            z-index: 1;
             pointer-events: none;
         }
         .star {
