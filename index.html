@@ -129,7 +129,7 @@
                             <div class="flex-1 text-left">
                                 <label class="block text-[9px] sm:text-xs font-bold text-neutral-400 uppercase tracking-wider mb-1 sm:mb-2">Route</label>
                                 <div class="relative">
-                                    <select id="route-dropdown" class="w-full bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-neutral-900 dark:text-white text-[11px] sm:text-base rounded-md lg:rounded-lg focus:ring-blue-500 block py-1.5 px-2 sm:p-2.5 lg:py-2 lg:px-3 font-bold appearance-none cursor-pointer"><option value="1" selected>Masdar 2</option></select>
+                                    <select id="route-dropdown" class="w-full bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-neutral-900 dark:text-white text-[11px] sm:text-base rounded-md lg:rounded-lg focus:ring-blue-500 block py-1.5 px-2 sm:p-2.5 lg:py-2 lg:px-3 font-bold appearance-none cursor-pointer"><option value="1" selected>Masdar 2</option><option value="2">Al Wasl Center</option></select>
                                     <svg class="w-3.5 h-3.5 sm:w-5 sm:h-5 lg:w-5 lg:h-5 absolute right-2 lg:right-3 top-1/2 transform -translate-y-1/2 text-neutral-500 pointer-events-none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
                                 </div>
                             </div>
@@ -243,12 +243,20 @@
         const ROUTES = {
             "1": { 
                 name: "Masdar 2", 
+                hub: "CBC",
                 stops: ['CBC (Dep)', 'Masdar 2', 'CBC (Arr)'], 
-                fromCBC: ["00:00", "00:20", "00:40", "01:00", "01:30", "02:00", "02:30", "03:00", "03:30", "04:00", "04:30", "05:00", "05:30", "06:00", "06:30", "07:00", "07:20", "07:40", "08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:20", "19:40", "20:00", "20:20", "20:40", "21:00", "21:20", "21:40", "22:00", "22:20", "22:40", "23:00", "23:30"],
-                toCBC: ["00:00", "00:20", "00:40", "01:00", "01:30", "02:00", "02:30", "03:00", "03:30", "04:00", "04:30", "05:00", "05:30", "06:00", "06:20", "06:40", "07:00", "07:30", "08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "11:50", "12:10", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:20", "18:40", "19:00", "19:20", "19:40", "20:00", "20:30", "21:00", "21:30", "22:00", "22:30", "23:00", "23:20", "23:40"]
+                fromHub: ["00:00", "00:20", "00:40", "01:00", "01:30", "02:00", "02:30", "03:00", "03:30", "04:00", "04:30", "05:00", "05:30", "06:00", "06:30", "07:00", "07:20", "07:40", "08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:20", "19:40", "20:00", "20:20", "20:40", "21:00", "21:20", "21:40", "22:00", "22:20", "22:40", "23:00", "23:30"],
+                toHub: ["00:00", "00:20", "00:40", "01:00", "01:30", "02:00", "02:30", "03:00", "03:30", "04:00", "04:30", "05:00", "05:30", "06:00", "06:20", "06:40", "07:00", "07:30", "08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "11:50", "12:10", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:20", "18:40", "19:00", "19:20", "19:40", "20:00", "20:30", "21:00", "21:30", "22:00", "22:30", "23:00", "23:20", "23:40"]
+            },
+            "2": {
+                name: "Al Wasl Center",
+                hub: "AUH",
+                stops: ['AUH (Dep)', 'Al Wasl Center', 'AUH (Arr)'],
+                fromHub: ["00:00", "02:00", "04:00"], 
+                toHub: ["01:00", "03:00", "05:00"] 
             }
         };
-        let activeRouteId="1",stopsData=[],schedule=[],stopNamesMap={},stopIndices={},currentDirection='from_cbc',currentStop='stop1',nextTripData={id:null,minutes:0,departs:'',arrives:''},nextTripTargetDate=null,activeBuses=[],forceScroll=!0,lastAutoScrolledId=null;
+        let activeRouteId="1",stopsData=[],schedule=[],stopNamesMap={},stopIndices={},currentDirection='from_hub',currentStop='stop1',nextTripData={id:null,minutes:0,departs:'',arrives:''},nextTripTargetDate=null,activeBuses=[],forceScroll=!0,lastAutoScrolledId=null;
         let eGateTimeMinutes=localStorage.getItem('crewbus_egate_time')?parseInt(localStorage.getItem('crewbus_egate_time')):null;
         let routeMode = localStorage.getItem('crewbus_route_mode') || 'auto';
         let screensaverAnimationInterval = null;
@@ -276,11 +284,11 @@
                 return `${h.toString().padStart(2,'0')}:${(mins % 60).toString().padStart(2,'0')}`;
             }
 
-            const timesList = currentDirection === 'from_cbc' ? rData.fromCBC : rData.toCBC;
+            const timesList = currentDirection === 'from_hub' ? rData.fromHub : rData.toHub;
             schedule = timesList.map((time, index) => {
                 let arrStr = padTime(timeToMinutes(time) + 15);
                 let o = { id: index };
-                if (currentDirection === 'from_cbc') {
+                if (currentDirection === 'from_hub') {
                     o.departs = time; o.stop1 = arrStr; o.arrives = arrStr; o.times = [time, arrStr, arrStr];
                 } else {
                     o.departs = time; o.stop1 = time; o.arrives = arrStr; o.times = [time, time, arrStr];
@@ -289,9 +297,11 @@
             });
             
             document.getElementById('header-accommodation-list').innerText=stopsData.slice(1,-1).join(' • ');
-            document.getElementById('header-route-name').innerText=`Route ${activeRouteId}`;
-            const sL=currentDirection==='from_cbc'?'CBC':stopNamesMap[currentStop].toUpperCase();
-            const eL=currentDirection==='from_cbc'?stopNamesMap[currentStop].toUpperCase():'CBC';
+            document.getElementById('header-route-name').innerText=rData.name;
+            const sL=currentDirection==='from_hub'?rData.hub:stopNamesMap[currentStop].toUpperCase();
+            const eL=currentDirection==='from_hub'?stopNamesMap[currentStop].toUpperCase():rData.hub;
+            document.getElementById('btn-from-eghq').innerText = `From ${rData.hub}`;
+            document.getElementById('btn-to-eghq').innerText = `To ${rData.hub}`;
             const pinIcon = `<svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>`;
             document.getElementById('mobile-label-start').innerHTML=`${pinIcon} ${sL}`;
             document.getElementById('mobile-label-end').innerHTML=`${eL} ${pinIcon}`;
@@ -301,7 +311,7 @@
         function setDirection(d,skipUpdate=!1){
             currentDirection=d;localStorage.setItem('etihad_saved_direction',d);
             const bf=document.getElementById('btn-from-eghq'),bt=document.getElementById('btn-to-eghq');
-            if(d==='from_cbc'){
+            if(d==='from_hub'){
                 bf.className="flex-1 py-1 sm:py-1.5 lg:py-2 text-[10px] sm:text-sm font-bold rounded lg:rounded-md bg-white dark:bg-neutral-800 shadow dark:shadow-none text-neutral-900 dark:text-white transition-all whitespace-nowrap text-center";
                 bt.className="flex-1 py-1 sm:py-1.5 lg:py-2 text-[10px] sm:text-sm font-medium rounded lg:rounded-md text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-all whitespace-nowrap text-center";
             } else {
@@ -335,8 +345,8 @@
         function calculateNextBus(){
             const now=new Date(),currMin=now.getHours()*60+now.getMinutes();
             let evts=schedule.map(t=>{
-                let dStr=currentDirection==='from_cbc'?t.departs:t[currentStop];
-                let aStr=currentDirection==='from_cbc'?t[currentStop]:t.arrives;
+                let dStr=currentDirection==='from_hub'?t.departs:t[currentStop];
+                let aStr=currentDirection==='from_hub'?t[currentStop]:t.arrives;
                 return {id:t.id,time:timeToMinutes(dStr),dStr:dStr.replace('*','--:--'),aStr:aStr.replace('*','--:--')};
             }).sort((a,b)=>a.time-b.time);
             let f=evts.find(e=>e.time>currMin);
@@ -389,7 +399,8 @@
             const b=document.getElementById('next-bus-banner');
             if(nextTripData.id!==null){
                 b.classList.remove('hidden');b.classList.add('flex');
-                const cn=stopNamesMap[currentStop],tTxt=currentDirection==='from_cbc'?'Departure from CBC':`Departure from ${cn}`,aTxt=currentDirection==='from_cbc'?`Arr at ${cn}`:'Arr at CBC';
+                const rData=ROUTES[activeRouteId];
+                const cn=stopNamesMap[currentStop],tTxt=currentDirection==='from_hub'?`Departure from ${rData.hub}`:`Departure from ${cn}`,aTxt=currentDirection==='from_hub'?`Arr at ${cn}`:`Arr at ${rData.hub}`;
                 document.getElementById('banner-title').innerText=tTxt;
                 document.getElementById('banner-arrival-label').innerText=aTxt;
                 document.getElementById('banner-arrival-label-desk').innerText=aTxt;
@@ -449,17 +460,18 @@
             }
         }
         function renderDesktopTable(){
+            const rData=ROUTES[activeRouteId];
             const th=document.getElementById('desktop-thead-tr'),cn=stopNamesMap[currentStop];
             const pinIcon = `<svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>`;
-            const dL=`<div class="flex items-center gap-2 text-left">${pinIcon} CBC (Dep)</div>`,aL=`<div class="flex items-center gap-2 text-left">${pinIcon} CBC (Arr)</div>`,sL=`<div class="flex items-center gap-2 text-left">${pinIcon} ${cn}</div>`;
-            th.innerHTML=currentDirection==='from_cbc'?`<th class="px-6 py-4 font-bold text-red-600 w-1/2 bg-transparent text-left">${dL}</th><th class="px-6 py-4 font-bold text-blue-600 w-1/2 bg-transparent text-left">${sL}</th>`:`<th class="px-6 py-4 font-bold text-blue-600 w-1/2 bg-transparent text-left">${sL}</th><th class="px-6 py-4 font-bold text-red-600 w-1/2 bg-transparent text-left">${aL}</th>`;
-            let s=[...schedule].sort((a,b)=>timeToMinutes(currentDirection==='from_cbc'?a.departs:a[currentStop])-timeToMinutes(currentDirection==='from_cbc'?b.departs:b[currentStop]));
+            const dL=`<div class="flex items-center gap-2 text-left">${pinIcon} ${rData.hub} (Dep)</div>`,aL=`<div class="flex items-center gap-2 text-left">${pinIcon} ${rData.hub} (Arr)</div>`,sL=`<div class="flex items-center gap-2 text-left">${pinIcon} ${cn}</div>`;
+            th.innerHTML=currentDirection==='from_hub'?`<th class="px-6 py-4 font-bold text-red-600 w-1/2 bg-transparent text-left">${dL}</th><th class="px-6 py-4 font-bold text-blue-600 w-1/2 bg-transparent text-left">${sL}</th>`:`<th class="px-6 py-4 font-bold text-blue-600 w-1/2 bg-transparent text-left">${sL}</th><th class="px-6 py-4 font-bold text-red-600 w-1/2 bg-transparent text-left">${aL}</th>`;
+            let s=[...schedule].sort((a,b)=>timeToMinutes(currentDirection==='from_hub'?a.departs:a[currentStop])-timeToMinutes(currentDirection==='from_hub'?b.departs:b[currentStop]));
             document.getElementById('desktop-tbody').innerHTML=s.map(t=>{
-                const n=t.id===nextTripData.id;let c1=currentDirection==='from_cbc'?t.departs:t[currentStop],c2=currentDirection==='from_cbc'?t[currentStop]:t.arrives;
+                const n=t.id===nextTripData.id;let c1=currentDirection==='from_hub'?t.departs:t[currentStop],c2=currentDirection==='from_hub'?t[currentStop]:t.arrives;
                 c1=c1.replace('*','--:--');c2=c2.replace('*','--:--');
                 let isEg=!1,egB='',egAttr='';
                 if(eGateTimeMinutes!==null){
-                    let aMins=timeToMinutes(currentDirection==='from_cbc'?t[currentStop]:t.arrives),d=aMins-eGateTimeMinutes;
+                    let aMins=timeToMinutes(currentDirection==='from_hub'?t[currentStop]:t.arrives),d=aMins-eGateTimeMinutes;
                     if(d<-720)d+=1440;if(d>720)d-=1440;
                     if(d>=-45&&d<=45){
                         isEg=!0;egAttr='data-egate="true"';
@@ -474,13 +486,13 @@
         }
         function renderMobileCards(){
             const mc=document.getElementById('mobile-cards-container');
-            let s=[...schedule].sort((a,b)=>timeToMinutes(currentDirection==='from_cbc'?a.departs:a[currentStop])-timeToMinutes(currentDirection==='from_cbc'?b.departs:b[currentStop]));
+            let s=[...schedule].sort((a,b)=>timeToMinutes(currentDirection==='from_hub'?a.departs:a[currentStop])-timeToMinutes(currentDirection==='from_hub'?b.departs:b[currentStop]));
             mc.innerHTML=s.map(t=>{
-                const n=t.id===nextTripData.id;let c1=currentDirection==='from_cbc'?t.departs:t[currentStop],c2=currentDirection==='from_cbc'?t[currentStop]:t.arrives;
+                const n=t.id===nextTripData.id;let c1=currentDirection==='from_hub'?t.departs:t[currentStop],c2=currentDirection==='from_hub'?t[currentStop]:t.arrives;
                 c1=c1.replace('*','--:--');c2=c2.replace('*','--:--');
                 let isEg=!1,egB='',egAttr='';
                 if(eGateTimeMinutes!==null){
-                    let aMins=timeToMinutes(currentDirection==='from_cbc'?t[currentStop]:t.arrives),d=aMins-eGateTimeMinutes;
+                    let aMins=timeToMinutes(currentDirection==='from_hub'?t[currentStop]:t.arrives),d=aMins-eGateTimeMinutes;
                     if(d<-720)d+=1440;if(d>720)d-=1440;
                     if(d>=-45&&d<=45){
                         isEg=!0;egAttr='data-egate="true"';
@@ -496,15 +508,16 @@
         }
         function renderAll(){renderBanner();renderDesktopTable();renderMobileCards();highlightSelectedStop();}
 
-        const CBC_LAT = 24.424749308210185;
-        const CBC_LNG = 54.64750280982393;
-        const CBC_RADIUS_KM = 1.5;
+        const HUBS = {
+            'CBC': { lat: 24.424749308210185, lng: 54.64750280982393 },
+            'AUH': { lat: 24.452932614325977, lng: 54.64204063910453 }
+        };
+        const HUB_RADIUS_KM = 1.5;
         const ACCOMMODATION_RADIUS_KM = 1.5;
 
         const STOP_LOCATIONS = {
             'Masdar 2': { lat: 24.432712430556133, lng: 54.621180323322946 },
-            'Al Wasl Center': { lat: 25.19570224764426, lng: 55.262119709843724 },
-            'Zayed International Airport AUH': { lat: 24.452932614325977, lng: 54.64204063910453 }
+            'Al Wasl Center': { lat: 25.19570224764426, lng: 55.262119709843724 }
         };
 
         const STOP_ALIASES = {
@@ -626,20 +639,34 @@
                     const userLat = position.coords.latitude;
                     const userLng = position.coords.longitude;
                     
-                    const distCBC = calculateDistance(userLat, userLng, CBC_LAT, CBC_LNG);
+                    let nearHub = null;
+                    let minHubDist = Infinity;
+                    for (const [hubName, coords] of Object.entries(HUBS)) {
+                        const dist = calculateDistance(userLat, userLng, coords.lat, coords.lng);
+                        if (dist < minHubDist) {
+                            minHubDist = dist;
+                            nearHub = hubName;
+                        }
+                    }
 
-                    // Outside Abu Dhabi (>60km from CBC) -> Show Screensaver
-                    if (distCBC > 60) {
+                    if (minHubDist > 60) {
                         showScreensaver('auto-location');
                         return;
                     }
 
-                    // Inside Abu Dhabi -> Only switch automatically if 'Auto' is selected
                     if (routeMode !== 'auto') return;
 
-                    if (distCBC <= CBC_RADIUS_KM) {
-                        setDirection('from_cbc');
-                        showLocationToast('CBC');
+                    if (minHubDist <= HUB_RADIUS_KM) {
+                        let foundRoute = null;
+                        for (const [rId, rData] of Object.entries(ROUTES)) {
+                            if (rData.hub === nearHub) { foundRoute = rId; break; }
+                        }
+                        if (foundRoute && foundRoute !== activeRouteId) {
+                            document.getElementById('route-dropdown').value = foundRoute;
+                            switchRoute(foundRoute, 'stop1');
+                        }
+                        setDirection('from_hub');
+                        showLocationToast(nearHub);
                         return;
                     }
 
@@ -682,14 +709,14 @@
 
                         if (foundRoute && foundStopKey) {
                             document.getElementById('route-dropdown').value = foundRoute;
-                            setDirection('to_cbc', true);
+                            setDirection('to_hub', true);
                             switchRoute(foundRoute, foundStopKey);
                             showLocationToast(targetName);
                         } else {
-                            setDirection('to_cbc');
+                            setDirection('to_hub');
                         }
                     } else {
-                        setDirection('to_cbc');
+                        setDirection('to_hub');
                     }
                 }, (err) => {
                     console.warn("Location access denied or unavailable.", err);
@@ -737,7 +764,7 @@
                 const val = document.getElementById('egate-time-input').value; if(!val) return;
                 eGateTimeMinutes = timeToMinutes(val);
                 localStorage.setItem('crewbus_egate_time', eGateTimeMinutes);
-                setDirection('to_cbc'); 
+                setDirection('to_hub'); 
                 document.getElementById('egate-modal').classList.add('hidden');
                 document.getElementById('egate-active-banner').classList.remove('hidden'); document.getElementById('egate-active-banner').classList.add('flex');
                 let h = Math.floor(eGateTimeMinutes/60), m = eGateTimeMinutes%60;
@@ -751,8 +778,8 @@
                 document.getElementById('egate-time-input').value = ''; forceScroll = true; updateTime();
             });
 
-            document.getElementById('btn-from-eghq').addEventListener('click',()=>setDirection('from_cbc'));
-            document.getElementById('btn-to-eghq').addEventListener('click',()=>setDirection('to_cbc'));
+            document.getElementById('btn-from-eghq').addEventListener('click',()=>setDirection('from_hub'));
+            document.getElementById('btn-to-eghq').addEventListener('click',()=>setDirection('to_hub'));
             document.getElementById('route-dropdown').addEventListener('change',(e)=>switchRoute(e.target.value));
             document.getElementById('stop-selector').addEventListener('change',(e)=>setStop(e.target.value));
             document.getElementById('btn-save-home').addEventListener('click',saveHomeLocation);
@@ -771,7 +798,7 @@
                 else { clockTimer = setTimeout(() => { clockClicks = 0; }, 600); }
             });
 
-            const sr=localStorage.getItem('etihad_saved_route')||'1',ss=localStorage.getItem('etihad_saved_stop')||'stop1',sd=localStorage.getItem('etihad_saved_direction')||'from_cbc';
+            const sr=localStorage.getItem('etihad_saved_route')||'1',ss=localStorage.getItem('etihad_saved_stop')||'stop1',sd=localStorage.getItem('etihad_saved_direction')||'from_hub';
             setDirection(sd,!0);document.getElementById('route-dropdown').value=sr;switchRoute(sr,ss);
             setRouteMode(routeMode);
             if (routeMode !== 'auto') autoDetectDirection(); // Ensure layover checks still run in background
