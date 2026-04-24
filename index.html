@@ -105,7 +105,7 @@
             </div>
         </div>
         <div id="comic-text-container" class="flex flex-wrap justify-center gap-y-2 gap-x-3 sm:gap-x-4 text-5xl sm:text-7xl font-black text-yellow-400 tracking-tighter uppercase z-10" style="text-shadow: -3px -3px 0 #0f172a, 0 -3px 0 #0f172a, 3px -3px 0 #0f172a, 3px 0 0 #0f172a, 3px 3px 0 #0f172a, 0 3px 0 #0f172a, -3px 3px 0 #0f172a, -3px 0 0 #0f172a; filter: drop-shadow(5px 5px 0 #0f172a); transform: skew(-5deg) rotate(-2deg);"></div>
-        <div id="screensaver-subtext" class="mt-4 sm:mt-6 text-lg sm:text-2xl font-black text-yellow-400 tracking-tighter uppercase z-10 opacity-0" style="text-shadow: -2px -2px 0 #0f172a, 0 -2px 0 #0f172a, 2px -2px 0 #0f172a, 2px 0 0 #0f172a, 2px 2px 0 #0f172a, 0 2px 0 #0f172a, -2px 2px 0 #0f172a, -2px 0 0 #0f172a; filter: drop-shadow(3px 3px 0 #0f172a); transform: skew(-5deg) rotate(-2deg);">(It looks you are not in AUH)</div>
+        <div id="screensaver-subtext" class="mt-4 sm:mt-6 text-lg sm:text-2xl font-black text-yellow-400 tracking-tighter uppercase z-10 opacity-0" style="text-shadow: -2px -2px 0 #0f172a, 0 -2px 0 #0f172a, 2px -2px 0 #0f172a, 2px 0 0 #0f172a, 2px 2px 0 #0f172a, 0 2px 0 #0f172a, -2px 2px 0 #0f172a, -2px 0 0 #0f172a; filter: drop-shadow(3px 3px 0 #0f172a); transform: skew(-5deg) rotate(-2deg);">It looks you are not in AUH</div>
     </div>
 
     <div id="main-app-wrapper" class="absolute inset-0 flex flex-col gap-2 sm:gap-4 px-2 sm:px-4 lg:px-6 pt-[max(env(safe-area-inset-top),0.5rem)] pb-[env(safe-area-inset-bottom)] sm:pb-4 lg:pb-6 text-center">
@@ -272,11 +272,7 @@
         let currentScreensaverScene = null;
         let screensaverTrigger = null;
         const SCREENSAVER_SCENES = [
-            { img: 'assets/crewsun.png', text: 'ENJOY YOUR TIME', disco: false, waves: false, vines: false },
-            { img: 'assets/crewdrink.png', text: 'PARTY TIME!', disco: true, waves: false, vines: false },
-            { img: 'assets/crewuntie.png', text: 'YOU CAN RELAAAAAX', disco: false, waves: false, vines: false },
-            { img: 'assets/crewduck.png', text: 'ON DUCK DUTY TODAY', disco: false, waves: true, vines: false },
-            { img: 'assets/crewexplorer.png', text: 'NEVER STOP EXPLORING', disco: false, waves: false, vines: true }
+            { img: 'assets/images/crewtired.png', text: 'HAVE A NICE REST', disco: false, waves: false, vines: false }
         ];
         const RAINBOW_COLORS = ['#ef4444', '#f97316', '#facc15', '#4ade80', '#0ea5e9', '#8b5cf6', '#ec4899'];
         
@@ -517,13 +513,13 @@
         }
         function renderAll(){renderBanner();renderDesktopTable();renderMobileCards();highlightSelectedStop();}
 
-        const CBC_LAT = 24.4455;
-        const CBC_LNG = 54.6171;
+        const CBC_LAT = 24.424749308210185;
+        const CBC_LNG = 54.64750280982393;
         const CBC_RADIUS_KM = 1.5;
         const ACCOMMODATION_RADIUS_KM = 1.5;
 
         const STOP_LOCATIONS = {
-            'Masdar 2': { lat: 24.4329, lng: 54.6161 }
+            'Masdar 2': { lat: 24.432712430556133, lng: 54.621180323322946 }
         };
 
         const STOP_ALIASES = {
