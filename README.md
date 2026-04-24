@@ -49,6 +49,7 @@ Etihad Bus currently covers the following routes running 24 hours a day:
 | Route | Key Stops |
 |---|---|
 | **Masdar 2** | CBC ↔ Masdar 2 |
+| **Al Wasl Center** | AUH ↔ Al Wasl Center |
 
 ---
 
