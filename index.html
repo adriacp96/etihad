@@ -51,11 +51,9 @@
 
     <div id="splash-screen" class="hidden fixed inset-0 z-[100] bg-white dark:bg-black flex flex-col items-center justify-center p-6 sm:p-8 overflow-y-auto custom-scrollbar animate-in fade-in duration-700">
         <div class="max-w-md w-full flex flex-col items-center py-8">
-            <div class="w-full overflow-hidden relative mb-8 shrink-0">
-                <div class="carousel-track" id="carousel-track">
-                </div>
-            </div>
-            <p class="text-neutral-500 dark:text-neutral-400 mb-6 text-sm sm:text-lg leading-relaxed font-medium text-center shrink-0">Add to Home Screen for the full experience.</p>
+            <img src="assets/images/etihadbus.png" alt="Etihad Bus Logo" class="w-28 h-28 sm:w-32 sm:h-32 mb-6 drop-shadow-xl shrink-0 rounded-3xl" style="animation: float 4s infinite ease-in-out;">
+            <h2 class="text-2xl sm:text-3xl font-black text-neutral-900 dark:text-white tracking-tight mb-2 text-center">Welcome to Etihad Bus</h2>
+            <p class="text-neutral-500 dark:text-neutral-400 mb-8 text-sm sm:text-lg leading-relaxed font-medium text-center shrink-0">Add to Home Screen for the full experience.</p>
             <div class="space-y-4 sm:space-y-6 w-full shrink-0">
                 <div class="flex items-center gap-4 bg-neutral-100 dark:bg-white/5 p-4 rounded-2xl border border-neutral-200 dark:border-white/10"><div class="w-10 h-10 bg-white dark:bg-neutral-800 rounded-lg flex items-center justify-center text-blue-500 shadow-sm shrink-0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg></div><div><p class="font-bold text-neutral-900 dark:text-white tracking-tight text-left">1. Tap Share</p><p class="text-sm text-neutral-500 dark:text-neutral-400 text-left">Located at the bottom of Safari.</p></div></div>
                 <div class="flex items-center gap-4 bg-neutral-100 dark:bg-white/5 p-4 rounded-2xl border border-neutral-200 dark:border-white/10 shadow-sm"><div class="w-10 h-10 bg-white dark:bg-neutral-800 rounded-lg flex items-center justify-center text-neutral-900 dark:text-white shadow-sm shrink-0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div><div><p class="font-bold text-neutral-900 dark:text-white tracking-tight text-left">2. Add to Home Screen</p><p class="text-sm text-neutral-500 dark:text-neutral-400 text-left">Find it in the Safari menu.</p></div></div>
@@ -748,51 +746,6 @@
             window.addEventListener('online', updateConnectivityUI);
             window.addEventListener('offline', updateConnectivityUI);
             updateConnectivityUI();
-
-            const crewEmotions = [
-                { src: 'assets/crewtime.png', text: 'Worried you might miss the next bus?' },
-                { src: 'assets/crewsleepy.png', text: 'Exhausted and disoriented after that grueling ULR flight?' },
-                { src: 'assets/crewmad.png', text: 'Just watched your ride pull away right in front of you?' },
-                { src: 'assets/crewlost.png', text: 'Not sure which schedule fits your next briefing?' },
-                { src: 'assets/crewhappy.png', text: 'Why rush? Walk with ease and always know your next ride.' },
-                { src: 'assets/images/etihadbus.png', text: 'Install Etihad Bus', isIcon: true }
-            ];
-            const track = document.getElementById('carousel-track');
-            if (track) {
-                crewEmotions.forEach(emotion => {
-                    const slide = document.createElement('div');
-                    slide.className = 'carousel-slide';
-                    const imageContent = emotion.isIcon 
-                        ? `<div class="w-[160px] h-[160px] rounded-3xl shadow-[0_0_20px_rgba(59,130,246,0.4)] border-2 border-blue-400 dark:border-blue-500 overflow-hidden shrink-0 animate-pop"><img class="w-full h-full object-cover pointer-events-none select-none" draggable="false" src="${emotion.src}" alt="Install CrewBus" fetchpriority="high" decoding="async"></div>`
-                        : `<img class="carousel-image pointer-events-none select-none" draggable="false" src="${emotion.src}" alt="CrewBus Scenario" fetchpriority="high" decoding="async">`;
-                    const textClass = emotion.isIcon
-                        ? `text-lg sm:text-xl text-blue-600 dark:text-blue-400 font-black`
-                        : `text-sm sm:text-base text-neutral-600 dark:text-neutral-300 font-semibold`;
-                    slide.innerHTML = `
-                        <div class="image-wrapper">${imageContent}</div>
-                        <p class="${textClass} text-center leading-relaxed px-2 min-h-[48px] flex items-center justify-center">${emotion.text}</p>
-                    `;
-                    track.appendChild(slide);
-                });
-
-                const firstSlideClone = track.children[0].cloneNode(true);
-                track.appendChild(firstSlideClone);
-
-                let currentSlide = 0;
-                setInterval(() => {
-                    currentSlide++;
-                    track.style.transition = 'transform 0.6s cubic-bezier(0.25,1,0.5,1)';
-                    track.style.transform = `translateX(-${currentSlide * 100}%)`;
-
-                    if (currentSlide === crewEmotions.length) {
-                        setTimeout(() => {
-                            track.style.transition = 'none';
-                            currentSlide = 0;
-                            track.style.transform = 'translateX(0)';
-                        }, 600);
-                    }
-                }, 3000);
-            }
 
             document.getElementById('btn-egate-planner').addEventListener('click', () => { document.getElementById('egate-modal').classList.remove('hidden'); });
             document.getElementById('btn-close-egate').addEventListener('click', () => { document.getElementById('egate-modal').classList.add('hidden'); });
