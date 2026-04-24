@@ -1,1011 +1,855 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Masdar 2</title>
-    <link rel="apple-touch-icon" href="assets/images/apple-touch-icon.png">
-    <link rel="apple-touch-startup-image" href="assets/images/apple-touch-icon.png">
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
+    <title>Etihad Bus</title>
+    
+    <meta name="title" content="Etihad Bus">
+    <meta name="description" content="Real-time bus schedules, briefing planner, and route tracking for Etihad crew.">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://crewbus.online/">
+    <meta property="og:title" content="Etihad Bus">
+    <meta property="og:description" content="Real-time bus schedules, briefing planner, and route tracking for Etihad crew.">
+    <meta property="og:image" content="https://raw.githubusercontent.com/adriacp96/crewbus/002f1ac615af5168f5c7f77c8d19d9639d61eedd/assets/mockup.png">
+
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://crewbus.online/">
+    <meta property="twitter:title" content="Etihad Bus">
+    <meta property="twitter:description" content="Real-time bus schedules, briefing planner, and route tracking for Etihad crew.">
+    <meta property="twitter:image" content="https://raw.githubusercontent.com/adriacp96/crewbus/002f1ac615af5168f5c7f77c8d19d9639d61eedd/assets/mockup.png">
+
+    <meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Etihad Bus">
+    <meta name="mobile-web-app-capable" content="yes"><meta name="application-name" content="Etihad Bus"><meta name="theme-color" content="#000000">
+    <link rel="apple-touch-icon" href="assets/images/etihadbus.png">
+    <link rel="icon" type="image/png" href="assets/images/etihadbus.png">
+    <link rel="manifest" href="manifest.json">
+    <link rel="preload" as="image" href="assets/crewtime.png">
+    <link rel="preload" as="image" href="assets/crewsleepy.png">
+    <link rel="preload" as="image" href="assets/crewmad.png">
+    <link rel="preload" as="image" href="assets/crewlost.png">
+    <link rel="preload" as="image" href="assets/crewhappy.png">
+    <link rel="preload" as="image" href="assets/crewrun.png">
+    <link rel="preconnect" href="https://cdn.tailwindcss.com"><link rel="dns-prefetch" href="https://cdn.tailwindcss.com">
+    <script src="https://cdn.tailwindcss.com"></script><script>tailwind.config={darkMode:'media'}</script>
     <style>
         @font-face {
             font-family: "Etihad Altis Book Book";
             src: url("assets/fonts/etihad-altis-book-book.woff2") format("woff2"),
-                url("assets/fonts/etihad-altis-book-book.woff") format("woff"),
-                url("assets/fonts/etihad-altis-book-book.ttf") format("truetype");
+                 url("assets/fonts/etihad-altis-book-book.woff") format("woff"),
+                 url("assets/fonts/etihad-altis-book-book.ttf") format("truetype");
         }
-
-        html {
-            height: 100%;
-            width: 100%;
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-        }
-        #background-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            min-height: 100vh;
-            background: linear-gradient(to bottom, #191970, #000080);
-            background-size: cover;
-            background-attachment: fixed;
-            z-index: 0;
-            transition: background 5s ease;
-        }
-        body {
-            font-family: "Etihad Altis Book Book";
-            margin: 0;
-            padding: 0;
-            height: 100vh;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            z-index: 1;
-            overflow: hidden;
-            padding-top: env(safe-area-inset-top);
-            padding-bottom: env(safe-area-inset-bottom);
-            box-sizing: border-box;
-        }
-        .etihad-logo {
-            position: absolute;
-            bottom: calc(20px + env(safe-area-inset-bottom));
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 5;
-            width: 120px;
-            height: 45px;
-            object-fit: scale-down;
-            object-position: center;
-        }
-        .container {
-            text-align: center;
-            background-color: rgba(255, 255, 255, 0.9);
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.3);
-            z-index: 4;
-            position: relative;
-        }
-        #countdown {
-            font-size: 2.5em;
-            color: #2c3e50;
-            margin: 20px 0;
-        }
-        #nextBus {
-            font-size: 1.2em;
-            color: #7f8c8d;
-        }
-        .progress-container {
-            width: 300px;
-            margin: 20px auto;
-            position: relative;
-        }
-        .progress-bar {
-            width: 100%;
-            height: 10px;
-            background-color: #ddd;
-            border-radius: 5px;
-            position: relative;
-            overflow: hidden;
-        }
-        .progress-fill {
-            height: 100%;
-            width: 0;
-            background-color: #ccc;
-            border-radius: 5px;
-            transition: width 0.5s linear, background-color 0.5s linear;
-        }
-        .bus-emoji {
-            font-size: 24px;
-            position: absolute;
-            top: -20px;
-            left: 0;
-            transform: scaleX(-1);
-            transition: left 0.5s linear;
-        }
-        .dune {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 25vh;
-            z-index: 3;
-            pointer-events: none;
-            opacity: 0.5;
-        }
-        .dune-gradient {
-            fill: url(#duneGradient);
-        }
-        #celestialBody {
-            font-size: 60px;
-            position: absolute;
-            transition: none;
-            z-index: 2;
-            opacity: 1;
-            pointer-events: none;
-        }
-        .button-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            margin-top: 20px;
-        }
-        #toggleRoute {
-            padding: 0;
-            font-size: 24px;
-            background-color: transparent;
-            color: #2c3e50;
-            border: none;
-            cursor: pointer;
-            transition: transform 0.3s;
-            width: 24px;
-            height: 24px;
-            line-height: 24px;
-            box-sizing: border-box;
-        }
-        #toggleRoute:hover {
-            transform: rotate(180deg);
-        }
-        .stars-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100vh;
-            z-index: 1;
-            pointer-events: none;
-        }
-        .star {
-            position: absolute;
-            background-color: rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            animation: fade 3s infinite;
-        }
-        @keyframes fade {
-            0% { opacity: 0.3; }
-            50% { opacity: 0.1; }
-            100% { opacity: 0.3; }
-        }
-        .input-container {
-            margin-top: 20px;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-        }
-        .input-container span {
-            font-family: "Etihad Altis Book Book";
-            font-size: 1.2em;
-            color: #2c3e50;
-        }
-        #busTimeInput {
-            padding: 10px;
-            font-size: 1.2em;
-            border: 2px solid #2c3e50;
-            border-radius: 5px;
-            outline: none;
-            width: 120px;
-            text-align: center;
-            background-color: white;
-            color: #2c3e50;
-        }
-        #playButton {
-            padding: 5px 10px;
-            font-size: 1em;
-            background-color: #2c3e50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        #playButton:hover {
-            background-color: #34495e;
-        }
-        #closestTimes {
-            margin-top: 10px;
-            font-size: 1.1em;
-            color: #2c3e50;
-            display: none;
-        }
-        #eGateButton {
-            padding: 0 20px;
-            font-size: 1.2em;
-            font-family: "Etihad Altis Book Book";
-            background: white;
-            color: #2c3e50;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: transform 0.3s;
-            width: 100px;
-            height: 24px;
-            line-height: 24px;
-            box-sizing: border-box;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-        #eGateButton:hover {
-            transform: scale(1.05);
-        }
-        #firstVisitPopup {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: rgba(255, 255, 255, 0.9);
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.3);
-            z-index: 1000;
-            text-align: center;
-            max-width: 90%;
-            width: 300px;
-            color: #2c3e50;
-        }
-        #firstVisitPopup h2 {
-            margin: 0 0 15px 0;
-            font-size: 1.5em;
-            text-align: center;
-        }
-        #firstVisitPopup p {
-            margin: 0 0 15px 0;
-            font-size: 1em;
-            line-height: 1.4;
-            text-align: center;
-        }
-        #firstVisitPopup ul {
-            list-style: none;
-            padding: 0;
-            margin: 0 0 15px 0;
-            text-align: center;
-        }
-        #firstVisitPopup li {
-            margin: 10px 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-        }
-        #firstVisitPopup .icon {
-            height: 1em;
-            margin-right: 8px;
-            vertical-align: middle;
-        }
-        #closePopup {
-            padding: 5px 15px;
-            font-size: 1em;
-            background-color: #2c3e50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        #closePopup:hover {
-            background-color: #34495e;
-        }
-        .black-background::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 1);
-            z-index: 999;
-            transition: opacity 0.3s ease;
-        }
+        body { font-family: "Etihad Altis Book Book", sans-serif !important; }
     </style>
 </head>
-<body>
-    <div id="background-container"></div>
-    <img src="assets/images/etihad-logo.svg" 
-         alt="Etihad Logo" class="etihad-logo">
-    <div class="container">
-        <h1 id="routeTitle">Masdar 2 to CBC in</h1>
-        <div id="countdown">00:00</div>
-        <div id="nextBus">Next bus at --:--</div>
-        <div class="progress-container">
-            <div class="progress-bar">
-                <div class="progress-fill" id="progressFill"></div>
+<body class="bg-neutral-50 dark:bg-black text-neutral-900 dark:text-neutral-100 font-sans transition-colors duration-200 select-none">
+
+    <div id="location-toast" class="fixed top-4 sm:top-6 mt-[env(safe-area-inset-top)] left-1/2 transform -translate-x-1/2 -translate-y-8 opacity-0 z-[100] bg-neutral-900 dark:bg-white text-white dark:text-black px-4 py-2.5 rounded-full shadow-xl shadow-black/20 dark:shadow-white/10 text-xs sm:text-sm font-bold flex items-center gap-2 transition-all duration-500 pointer-events-none border border-neutral-700 dark:border-neutral-200">
+        <svg class="w-4 h-4 text-blue-400 dark:text-blue-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+        <span id="location-toast-text">Detected location: </span>
+    </div>
+
+    <div id="splash-screen" class="hidden fixed inset-0 z-[100] bg-white dark:bg-black flex flex-col items-center justify-center p-6 sm:p-8 overflow-y-auto custom-scrollbar animate-in fade-in duration-700">
+        <div class="max-w-md w-full flex flex-col items-center py-8">
+            <div class="w-full overflow-hidden relative mb-8 shrink-0">
+                <div class="carousel-track" id="carousel-track">
+                </div>
             </div>
-            <div class="bus-emoji" id="busEmoji">🚌</div>
+            <p class="text-neutral-500 dark:text-neutral-400 mb-6 text-sm sm:text-lg leading-relaxed font-medium text-center shrink-0">Add to Home Screen for the full experience.</p>
+            <div class="space-y-4 sm:space-y-6 w-full shrink-0">
+                <div class="flex items-center gap-4 bg-neutral-100 dark:bg-white/5 p-4 rounded-2xl border border-neutral-200 dark:border-white/10"><div class="w-10 h-10 bg-white dark:bg-neutral-800 rounded-lg flex items-center justify-center text-blue-500 shadow-sm shrink-0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg></div><div><p class="font-bold text-neutral-900 dark:text-white tracking-tight text-left">1. Tap Share</p><p class="text-sm text-neutral-500 dark:text-neutral-400 text-left">Located at the bottom of Safari.</p></div></div>
+                <div class="flex items-center gap-4 bg-neutral-100 dark:bg-white/5 p-4 rounded-2xl border border-neutral-200 dark:border-white/10 shadow-sm"><div class="w-10 h-10 bg-white dark:bg-neutral-800 rounded-lg flex items-center justify-center text-neutral-900 dark:text-white shadow-sm shrink-0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div><div><p class="font-bold text-neutral-900 dark:text-white tracking-tight text-left">2. Add to Home Screen</p><p class="text-sm text-neutral-500 dark:text-neutral-400 text-left">Find it in the Safari menu.</p></div></div>
+            </div><button id="dismiss-splash" class="mt-8 sm:mt-12 w-full px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl font-bold text-lg shrink-0">Got it</button>
         </div>
-        <div class="button-container">
-            <button id="toggleRoute" aria-label="Toggle route" title="Toggle route">⇄</button>
-            <button id="eGateButton">eGate</button>
-        </div>
-        <div class="input-container">
-            <span>eGate</span>
-            <input type="time" id="busTimeInput">
-            <button id="playButton">✕</button>
-        </div>
-        <div id="closestTimes"></div>
-    </div>
-    <div id="celestialBody">☀️</div>
-    <div class="stars-container" id="starsContainer"></div>
-
-    <div id="firstVisitPopup">
-        <h2>Add to Home Screen</h2>
-        <p>To install this app on your iPhone:</p>
-        <ul>
-            <li>
-                <img src="assets/images/share-icon.png" alt="Share Icon" class="icon">
-                Tap the "Share" button in Safari
-            </li>
-            <li>
-                <img src="assets/images/add-home-icon.png" alt="Add to Home Screen Icon" class="icon">
-                Select "Add to Home Screen"
-            </li>
-            <li>
-                Tap "Add" in the top-right corner
-            </li>
-        </ul>
-        <button id="closePopup">Close</button>
     </div>
 
+    <div id="egate-modal" class="hidden fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm flex flex-col items-center justify-end sm:justify-center p-4 transition-opacity">
+        <div class="bg-white dark:bg-neutral-900 w-full max-w-sm rounded-[2rem] p-6 shadow-2xl transform transition-transform translate-y-0 relative border border-neutral-200 dark:border-neutral-800">
+            <button id="btn-close-egate" class="absolute top-5 right-5 p-2 bg-neutral-100 dark:bg-neutral-800 rounded-full text-neutral-500 hover:text-neutral-900 dark:hover:text-white transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+            <div class="w-12 h-12 bg-indigo-100 dark:bg-indigo-900/50 rounded-2xl flex items-center justify-center text-indigo-600 dark:text-indigo-400 mb-4">
+                <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><path d="M9 9h.01"/><path d="M15 9h.01"/></svg>
+            </div>
+            <h3 class="text-2xl font-black mb-1 text-neutral-900 dark:text-white tracking-tight">eGate Planner</h3>
+            <p class="text-sm text-neutral-500 dark:text-neutral-400 mb-6 font-medium">When does your eGate open?</p>
+            <input type="time" id="egate-time-input" class="w-full bg-neutral-50 dark:bg-black text-4xl font-bold text-center py-4 rounded-2xl mb-6 border-2 border-neutral-200 dark:border-neutral-800 text-indigo-600 dark:text-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-500 outline-none transition-colors">
+            <button id="btn-find-egate" class="w-full py-4 bg-indigo-600 hover:bg-indigo-700 text-white text-lg font-bold rounded-2xl">Find Buses</button>
+        </div>
+    </div>
+
+    <div id="fullscreen-overlay" class="hidden fixed inset-0 z-50 bg-white dark:bg-black flex flex-col items-center justify-center text-neutral-900 dark:text-white transition-opacity h-full w-full">
+        <button id="btn-close-fs" class="absolute top-16 left-1/2 transform -translate-x-1/2 p-4 bg-neutral-100 dark:bg-white/10 rounded-full hover:bg-neutral-200 dark:hover:bg-white/20 transition-all cursor-pointer border border-neutral-200 dark:border-white/10 text-center"><svg class="w-8 h-8 text-center" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 14 10 14 10 20"/><polyline points="20 10 14 10 14 4"/><line x1="14" x2="21" y1="10" y2="3"/><line x1="3" x2="10" y1="21" y2="14"/></svg></button>
+        <div class="text-center px-4 w-full max-w-2xl"><p id="fs-title" class="text-indigo-600 dark:text-indigo-400 font-semibold tracking-widest uppercase text-sm sm:text-xl mb-4 sm:mb-8 text-center">Next Departure</p><div id="fs-departs" class="text-[6rem] sm:text-[12rem] font-extrabold tracking-tighter leading-none mb-10 sm:mb-16 text-neutral-900 dark:text-white text-center">--:--</div><div id="fs-countdown-box" class="flex flex-col items-center justify-center bg-neutral-100 dark:bg-neutral-900 p-8 sm:p-12 rounded-3xl border border-neutral-200 dark:border-white/10 w-full mx-auto transition-all duration-500 shadow-xl dark:shadow-2xl"><p class="text-sm sm:text-lg text-neutral-500 dark:text-neutral-400 uppercase tracking-widest font-bold mb-4 text-center">Departing In</p><div id="fs-countdown" class="text-7xl sm:text-9xl font-bold font-mono tracking-tight text-neutral-900 dark:text-white mb-2 tabular-nums text-center">--:--</div></div><div class="mt-10 sm:mt-16 flex items-center justify-center gap-3 sm:gap-4 text-xl sm:text-3xl text-neutral-600 dark:text-neutral-300 font-medium text-center"><span id="fs-arrival-label">Expected Arrival</span><span id="fs-arrives" class="font-bold text-neutral-900 dark:text-white text-center">--:--</span><svg class="w-6 h-6 sm:w-8 sm:h-8 text-green-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div></div>
+    </div>
+
+    <div id="screensaver" class="hidden fixed inset-0 z-[70] bg-white dark:bg-black flex-col items-center justify-center p-6 text-center transition-opacity duration-500 w-full h-full overflow-hidden">
+        <div id="disco-ball-wrapper" class="hidden absolute top-0 left-1/2 z-0">
+            <div class="flex flex-col items-center origin-top -ml-[50%]" style="animation: swing 2.5s infinite ease-in-out alternate;">
+                <div class="w-0.5 h-24 sm:h-40 bg-gradient-to-b from-neutral-800 to-neutral-400 dark:from-black dark:to-neutral-600 shadow-sm"></div>
+                <div class="relative w-16 h-16 sm:w-24 sm:h-24 rounded-full overflow-hidden shadow-[0_0_30px_rgba(255,255,255,0.6)] dark:shadow-[0_0_30px_rgba(255,255,255,0.3)] border border-slate-400 disco-ball">
+                    <div class="absolute inset-0 w-full h-full rounded-full disco-light"></div>
+                    <div class="absolute inset-0 rounded-full" style="box-shadow: inset -10px -10px 20px rgba(0,0,0,0.7), inset 10px 10px 20px rgba(255,255,255,0.9);"></div>
+                </div>
+            </div>
+        </div>
+        <button id="btn-close-screensaver" class="absolute top-[calc(env(safe-area-inset-top)+1rem)] right-5 p-3 bg-neutral-100 dark:bg-neutral-800 rounded-full text-neutral-500 hover:text-neutral-900 dark:hover:text-white transition-colors active:scale-90 z-20">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+        </button>
+        <div id="vines-wrapper" class="hidden absolute top-0 left-0 w-full h-[30vh] sm:h-[40vh] z-20 pointer-events-none vines-wrapper"></div>
+        <div class="relative w-64 h-64 sm:w-80 sm:h-80 mb-8 z-10" style="animation: float 4s infinite ease-in-out;">
+            <img id="screensaver-img" src="assets/crewsun.png" alt="Enjoy Your Time" class="w-full h-full object-contain drop-shadow-2xl pointer-events-none select-none" draggable="false" fetchpriority="high">
+            <div id="waves-wrapper" class="hidden absolute bottom-0 left-0 w-full h-1/3 z-10 pointer-events-none overflow-hidden" style="-webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent); mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);">
+                <div class="absolute bottom-0 left-0 w-full h-full wave-bg-back opacity-80"></div>
+                <div class="absolute -bottom-2 left-0 w-full h-full wave-bg-front"></div>
+            </div>
+        </div>
+        <div id="comic-text-container" class="flex flex-wrap justify-center gap-y-2 gap-x-3 sm:gap-x-4 text-5xl sm:text-7xl font-black text-yellow-400 tracking-tighter uppercase z-10" style="text-shadow: -3px -3px 0 #0f172a, 0 -3px 0 #0f172a, 3px -3px 0 #0f172a, 3px 0 0 #0f172a, 3px 3px 0 #0f172a, 0 3px 0 #0f172a, -3px 3px 0 #0f172a, -3px 0 0 #0f172a; filter: drop-shadow(5px 5px 0 #0f172a); transform: skew(-5deg) rotate(-2deg);"></div>
+        <div id="screensaver-subtext" class="mt-4 sm:mt-6 text-lg sm:text-2xl font-black text-yellow-400 tracking-tighter uppercase z-10 opacity-0" style="text-shadow: -2px -2px 0 #0f172a, 0 -2px 0 #0f172a, 2px -2px 0 #0f172a, 2px 0 0 #0f172a, 2px 2px 0 #0f172a, 0 2px 0 #0f172a, -2px 2px 0 #0f172a, -2px 0 0 #0f172a; filter: drop-shadow(3px 3px 0 #0f172a); transform: skew(-5deg) rotate(-2deg);">(It looks you are not in AUH)</div>
+    </div>
+
+    <div id="main-app-wrapper" class="absolute inset-0 flex flex-col gap-2 sm:gap-4 px-2 sm:px-4 lg:px-6 pt-[max(env(safe-area-inset-top),0.5rem)] pb-[env(safe-area-inset-bottom)] sm:pb-4 lg:pb-6 text-center">
+        <header class="shrink-0 flex flex-row items-center justify-between bg-white dark:bg-black p-2.5 sm:p-5 lg:px-6 lg:py-5 rounded-xl sm:rounded-2xl lg:rounded-2xl border border-neutral-200 dark:border-neutral-800 shadow-sm dark:shadow-none">
+            <div class="flex items-center gap-2.5 sm:gap-4 lg:gap-5 text-left">
+                <div class="w-9 h-9 sm:w-14 sm:h-14 lg:w-14 lg:h-14 bg-red-600 rounded-lg sm:rounded-xl flex items-center justify-center text-white shadow-md shadow-red-600/30 shrink-0">
+                    <svg class="w-5 h-5 sm:w-8 sm:h-8 lg:w-8 lg:h-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6 2 7"/><path d="M10 6h4"/><path d="m22 7-2-1"/><rect width="16" height="16" x="4" y="3" rx="2"/><path d="M4 11h16"/><path d="M8 15h.01"/><path d="M16 15h.01"/><path d="M6 19v2"/><path d="M18 19v2"/></svg>
+                </div>
+                <div>
+                    <h1 id="header-route-name" class="text-base sm:text-2xl lg:text-3xl font-bold lg:font-black text-neutral-900 dark:text-white tracking-tight leading-none">Masdar 2</h1>
+                    <p id="header-accommodation-list" class="text-[9px] sm:text-sm text-neutral-500 font-medium flex items-center gap-1 mt-1 sm:mt-1.5 uppercase tracking-tight">Loading...</p>
+                </div>
+            </div>
+            <div class="bg-neutral-100 dark:bg-neutral-900/50 px-2.5 py-1.5 sm:px-5 sm:py-3 lg:px-5 lg:py-3 rounded-lg sm:rounded-xl lg:rounded-xl border border-neutral-200 dark:border-neutral-800 shrink-0 text-right">
+                <p class="hidden sm:block text-xs lg:text-[10px] text-neutral-400 dark:text-neutral-500 font-medium lg:font-bold uppercase tracking-wider mb-1">Current Time</p>
+                <div id="clock-container" class="flex items-center gap-1 sm:gap-2 lg:gap-2 text-sm sm:text-xl lg:text-xl font-bold text-neutral-900 dark:text-neutral-100 justify-end cursor-pointer">
+                    <svg class="w-3.5 h-3.5 sm:w-5 sm:h-5 lg:w-5 lg:h-5 text-neutral-400 dark:text-neutral-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    <span id="current-time-display">--:--</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="flex flex-col lg:flex-row gap-2 sm:gap-4 flex-1 min-h-0 w-full">
+            <div class="flex flex-col gap-2 sm:gap-4 w-full lg:w-[320px] xl:w-[380px] shrink-0 lg:min-h-0">
+                <div class="flex flex-col gap-2 sm:gap-4 bg-white dark:bg-black p-2 sm:p-5 lg:p-5 rounded-xl sm:rounded-2xl lg:rounded-2xl border border-neutral-200 dark:border-neutral-800 shadow-sm dark:shadow-none transition-colors">
+                    <div class="flex bg-neutral-100 dark:bg-neutral-900 rounded-md lg:rounded-lg p-0.5 sm:p-1 lg:p-1.5 border border-neutral-200 dark:border-neutral-800 shrink-0">
+                        <button id="btn-mode-auto" class="flex-1 py-1 sm:py-1.5 lg:py-2 text-[10px] sm:text-sm font-bold rounded lg:rounded-md bg-white dark:bg-neutral-800 shadow dark:shadow-none text-neutral-900 dark:text-white transition-all whitespace-nowrap text-center flex items-center justify-center gap-1.5">
+                            <svg class="w-3 h-3 sm:w-4 sm:h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+                            Auto
+                        </button>
+                        <button id="btn-mode-manual" class="flex-1 py-1 sm:py-1.5 lg:py-2 text-[10px] sm:text-sm font-medium rounded lg:rounded-md text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-all whitespace-nowrap text-center flex items-center justify-center gap-1.5">
+                            <svg class="w-3 h-3 sm:w-4 sm:h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21.54 15H17a2 2 0 0 0-2 2v4.54"/><path d="M7 3.34V5a3 3 0 0 0 3 3v0a2 2 0 0 1 2 2v0c0 1.1.9 2 2 2v0a2 2 0 0 0 2-2v0c0-1.1.9-2 2-2h3.17"/><path d="M11 21.95V18a2 2 0 0 0-2-2v0a2 2 0 0 1-2-2v-1a2 2 0 0 0-2-2H2.05"/><circle cx="12" cy="12" r="10"/></svg>
+                            Manual
+                        </button>
+                    </div>
+                    <div id="manual-controls" class="hidden">
+                        <div class="grid grid-cols-2 sm:grid-cols-3 lg:flex lg:flex-col gap-2 sm:gap-4">
+                            <div class="flex-1 text-left">
+                                <label class="block text-[9px] sm:text-xs font-bold text-neutral-400 uppercase tracking-wider mb-1 sm:mb-2">Route</label>
+                                <div class="relative">
+                                    <select id="route-dropdown" class="w-full bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-neutral-900 dark:text-white text-[11px] sm:text-base rounded-md lg:rounded-lg focus:ring-blue-500 block py-1.5 px-2 sm:p-2.5 lg:py-2 lg:px-3 font-bold appearance-none cursor-pointer"><option value="1" selected>Masdar 2</option></select>
+                                    <svg class="w-3.5 h-3.5 sm:w-5 sm:h-5 lg:w-5 lg:h-5 absolute right-2 lg:right-3 top-1/2 transform -translate-y-1/2 text-neutral-500 pointer-events-none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                                </div>
+                            </div>
+                            <div class="flex-1 text-left">
+                                <label class="block text-[9px] sm:text-xs font-bold text-neutral-400 uppercase tracking-wider mb-1 sm:mb-2">Accommodation</label>
+                                <div class="flex items-center gap-1.5 sm:gap-2">
+                                    <div class="relative flex-1 min-w-0">
+                                        <select id="stop-selector" class="w-full bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-neutral-900 dark:text-white text-[11px] sm:text-base rounded-md lg:rounded-lg focus:ring-blue-500 block py-1.5 px-2 sm:p-2.5 lg:py-2 lg:px-3 font-bold appearance-none cursor-pointer"></select>
+                                        <svg class="w-3.5 h-3.5 sm:w-5 sm:h-5 lg:w-5 lg:h-5 absolute right-2 lg:right-3 top-1/2 transform -translate-y-1/2 text-neutral-500 pointer-events-none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                                    </div>
+                                    <button id="btn-save-home" title="Save as Home" class="shrink-0 flex items-center justify-center p-1.5 sm:p-2.5 lg:p-2 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-md lg:rounded-lg border border-indigo-200 dark:border-indigo-800/50 hover:bg-indigo-100 dark:hover:bg-indigo-900/50 transition-all shadow-sm">
+                                        <svg class="w-4 h-4 sm:w-5 sm:h-5 lg:w-5 lg:h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" /></svg>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-span-2 sm:col-span-1 lg:col-span-1 text-left">
+                                <label class="block text-[9px] sm:text-xs font-bold text-neutral-400 uppercase tracking-wider mb-1 sm:mb-2 text-left tracking-wide">Direction</label>
+                                <div class="flex bg-neutral-100 dark:bg-neutral-900 rounded-md lg:rounded-lg p-0.5 sm:p-1 lg:p-1.5 border border-neutral-200 dark:border-neutral-800">
+                                    <button id="btn-from-eghq" class="flex-1 py-1 sm:py-1.5 lg:py-2 text-[10px] sm:text-sm font-bold rounded lg:rounded-md bg-white dark:bg-neutral-800 shadow dark:shadow-none text-neutral-900 dark:text-white transition-all whitespace-nowrap text-center">From CBC</button>
+                                    <button id="btn-to-eghq" class="flex-1 py-1 sm:py-1.5 lg:py-2 text-[10px] sm:text-sm font-medium rounded lg:rounded-md text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-all whitespace-nowrap text-center">To CBC</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="next-bus-banner" class="shrink-0 hidden bg-gradient-to-br from-indigo-700 to-blue-900 rounded-xl sm:rounded-2xl lg:rounded-2xl p-3 sm:p-8 lg:p-8 text-white shadow-lg lg:shadow-xl lg:shadow-indigo-900/10 dark:shadow-none border border-white/5 lg:border-white/10 flex-row lg:flex-col items-center lg:items-start justify-between gap-2 sm:gap-4 lg:gap-4 overflow-hidden relative lg:flex-1 lg:min-h-0">
+                    <button id="btn-expand-fs" class="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 lg:left-auto lg:top-4 lg:right-4 lg:transform-none z-20 p-2 sm:p-3 lg:p-2.5 bg-white/20 rounded-full hover:bg-white/30 transition-all cursor-pointer text-white shadow-lg backdrop-blur-md border border-white/30">
+                        <svg class="w-4 h-4 sm:w-6 sm:h-6 lg:w-5 lg:h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" x2="14" y1="3" y2="10"/><line x1="3" x2="10" y1="21" y2="14"/></svg>
+                    </button>
+                    <div class="absolute top-0 right-0 opacity-10 pointer-events-none transform translate-x-1/4 -translate-y-1/4 lg:transform-none lg:-bottom-10 lg:-right-10 lg:top-auto">
+                        <svg class="w-32 h-32 sm:w-60 sm:h-60 lg:w-64 lg:h-64" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6 2 7"/><path d="M10 6h4"/><path d="m22 7-2-1"/><rect width="16" height="16" x="4" y="3" rx="2"/><path d="M4 11h16"/><path d="M8 15h.01"/><path d="M16 15h.01"/><path d="M6 19v2"/><path d="M18 19v2"/></svg>
+                    </div>
+                    <div class="relative z-10 text-left">
+                        <p id="banner-title" class="text-blue-200 lg:text-indigo-200 font-medium lg:font-bold tracking-wide lg:tracking-widest uppercase text-[9px] sm:text-sm lg:text-xs mb-0.5 sm:mb-2 text-left">Next Departure</p>
+                        <div class="flex items-baseline gap-1.5 sm:gap-3 text-left justify-start">
+                            <span id="banner-departs" class="text-2xl sm:text-6xl lg:text-6xl font-extrabold lg:font-black leading-none tracking-tighter">--:--</span>
+                            <span id="banner-minutes" class="text-xs sm:text-2xl lg:text-2xl text-indigo-100 font-medium lg:font-semibold leading-none text-left">--</span>
+                        </div>
+                    </div>
+                    <div class="relative z-10 flex items-center bg-black/30 px-2.5 py-1.5 sm:px-6 sm:py-4 lg:px-4 lg:py-3 rounded-lg sm:rounded-xl lg:rounded-xl backdrop-blur-sm lg:backdrop-blur-md border border-white/10 shrink-0 text-right lg:w-full lg:justify-between lg:mt-auto">
+                        <span id="banner-arrival-label-desk" class="hidden lg:block text-[10px] text-indigo-200 font-bold uppercase tracking-widest text-left lg:mr-auto">Expected Arr</span>
+                        <div class="flex flex-col items-end w-full sm:w-auto">
+                            <span id="banner-arrival-label" class="text-[9px] sm:text-sm text-indigo-200 font-medium mb-0.5 sm:mb-1 uppercase tracking-tight text-right lg:hidden">Expected Arr</span>
+                            <span class="text-base sm:text-2xl lg:text-2xl font-bold lg:font-black flex items-center gap-1 sm:gap-2 leading-none">
+                                <span id="banner-arrives">--:--</span>
+                                <svg class="w-3.5 h-3.5 sm:w-6 sm:h-6 lg:w-5 lg:h-5 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex-1 flex flex-col gap-2 sm:gap-4 min-h-0">
+                <div class="shrink-0 bg-white dark:bg-black rounded-xl sm:rounded-2xl lg:rounded-2xl border border-neutral-200 dark:border-neutral-800 flex flex-col shadow-sm dark:shadow-none transition-colors relative">
+                    <div class="flex items-center justify-end pt-2 sm:pt-4 lg:pt-3 px-3 sm:px-6 mb-0">
+                        <span id="connectivity-status" class="flex items-center gap-1 lg:gap-1.5 px-1.5 lg:px-2 py-0.5 rounded-full bg-green-100 dark:bg-green-950 text-green-600 dark:text-green-400 lg:text-green-700 border border-green-200 dark:border-green-900/50 text-[8px] sm:text-xs font-bold uppercase tracking-wider shrink-0 text-right">
+                            <span class="relative flex h-1 w-1 sm:h-2 sm:w-2 lg:h-1.5 lg:w-1.5"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75"></span><span class="relative inline-flex rounded-full h-1 w-1 sm:h-2 sm:w-2 lg:h-1.5 lg:w-1.5 bg-green-500"></span></span>Live
+                        </span>
+                    </div>
+                    <div class="w-full overflow-hidden px-1 sm:px-4 lg:px-6 pt-1 sm:pt-2">
+                        <div id="route-map-container" class="flex items-center w-full justify-between pb-8 sm:pb-12 lg:pb-14 pt-2 sm:pt-4 px-1 sm:px-2 lg:px-4 min-w-0"></div>
+                    </div>
+                </div>
+                
+                <div class="flex-1 flex flex-col min-h-0 bg-white dark:bg-black rounded-t-xl rounded-b-none sm:rounded-b-2xl border-x border-t sm:border-b border-neutral-200 dark:border-neutral-800 overflow-hidden transition-colors shadow-sm dark:shadow-none">
+                    <div class="shrink-0 px-3 py-2 sm:px-6 sm:py-5 border-b border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900 flex justify-between items-center text-left">
+                        <h2 class="text-xs sm:text-lg lg:text-lg font-bold lg:font-black text-neutral-900 dark:text-neutral-100 uppercase tracking-tight text-left">Your Bus Schedule</h2>
+                        <div class="flex items-center gap-1 sm:gap-2 lg:gap-3">
+                            <button id="btn-egate-planner" class="flex items-center gap-1 sm:gap-1.5 lg:gap-2 px-2.5 py-1 sm:px-3 sm:py-1.5 lg:px-4 lg:py-2 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 font-bold text-[10px] sm:text-xs lg:text-sm rounded-lg lg:rounded-xl border border-indigo-200 dark:border-indigo-800/50 hover:bg-indigo-100 dark:hover:bg-indigo-900/50 transition-colors shadow-sm">
+                                <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><path d="M9 9h.01"/><path d="M15 9h.01"/></svg>
+                                <span class="hidden sm:inline">eGate Planner</span><span class="sm:hidden">eGate</span>
+                            </button>
+                            <button id="btn-center-schedule" class="p-1 sm:p-2 lg:p-1.5 bg-white dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300 rounded-md sm:rounded-lg lg:rounded-xl border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-700 transition-colors shadow-sm text-center">
+                                <svg class="w-3.5 h-3.5 sm:w-5 sm:h-5 text-center" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="3"/></svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="egate-active-banner" class="hidden shrink-0 bg-gradient-to-r from-indigo-50 to-blue-50 dark:from-indigo-900/30 dark:to-blue-900/20 border-b border-indigo-200 dark:border-indigo-800/50 py-2 sm:py-3 px-3 sm:px-6 lg:px-6 justify-between items-center text-left transition-all">
+                        <div class="flex items-center gap-2 sm:gap-3">
+                            <span class="bg-indigo-600 text-white text-[9px] sm:text-[10px] lg:text-xs font-bold px-1.5 py-0.5 sm:px-2 sm:py-1 lg:px-3 lg:py-1 rounded lg:rounded-md shadow-sm flex items-center gap-1 lg:gap-1.5 uppercase tracking-wider">
+                                <svg class="w-3 h-3 lg:w-3.5 lg:h-3.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><path d="M9 9h.01"/><path d="M15 9h.01"/></svg>eGate Mode
+                            </span>
+                            <span class="text-[10px] sm:text-sm font-semibold lg:font-bold text-indigo-900 dark:text-indigo-200">Window: <span id="egate-window-text"></span></span>
+                        </div>
+                        <button id="btn-clear-egate" class="text-[10px] sm:text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 hover:underline px-2.5 py-1 lg:px-3 lg:py-1.5 bg-white/60 dark:bg-black/40 rounded-md lg:rounded-lg border border-indigo-200 dark:border-indigo-800/50 shadow-sm transition-colors">Clear</button>
+                    </div>
+                    
+                    <div class="md:hidden shrink-0 grid grid-cols-2 bg-neutral-50/50 dark:bg-neutral-900/50 py-2 border-b border-neutral-200 dark:border-neutral-800 text-[10px] font-bold text-neutral-400 dark:text-neutral-500 uppercase tracking-widest px-3 z-10 sticky top-0">
+                        <div id="mobile-label-start" class="text-left flex items-center gap-1"></div>
+                        <div id="mobile-label-end" class="text-right flex items-center gap-1 justify-end"></div>
+                    </div>
+
+                    <div id="desktop-table-container" class="hidden md:block flex-1 overflow-x-auto overflow-y-auto custom-scrollbar scroll-smooth relative text-left">
+                        <table class="w-full text-left text-sm whitespace-nowrap">
+                            <thead class="bg-neutral-50/90 dark:bg-neutral-900/90 backdrop-blur-md text-neutral-500 dark:text-neutral-400 uppercase tracking-widest text-xs sticky top-0 z-10 shadow-sm border-b border-neutral-200 dark:border-neutral-800 text-left">
+                                <tr id="desktop-thead-tr" class="text-left"></tr>
+                            </thead>
+                            <tbody id="desktop-tbody" class="divide-y divide-neutral-100 dark:divide-neutral-800/60 text-left"></tbody>
+                        </table>
+                    </div>
+                    
+                    <div id="mobile-cards-container" class="md:hidden flex-1 overflow-y-auto custom-scrollbar scroll-smooth relative pb-6 text-left"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <script>
-    let isMasdarToCBC = true;
-    let starsCreated = false;
-
-    const masdarToCBCSchedule = [
-        { masdar: "00:00", cbc: "00:15" }, { masdar: "00:20", cbc: "00:35" }, { masdar: "00:40", cbc: "00:55" },
-        { masdar: "01:00", cbc: "01:15" }, { masdar: "01:30", cbc: "01:45" }, { masdar: "02:00", cbc: "02:15" },
-        { masdar: "02:30", cbc: "02:45" }, { masdar: "03:00", cbc: "03:15" }, { masdar: "03:30", cbc: "03:45" },
-        { masdar: "04:00", cbc: "04:15" }, { masdar: "04:30", cbc: "04:45" }, { masdar: "05:00", cbc: "05:15" },
-        { masdar: "05:30", cbc: "05:45" }, { masdar: "06:00", cbc: "06:15" }, { masdar: "06:20", cbc: "06:35" },
-        { masdar: "06:40", cbc: "06:55" }, { masdar: "07:00", cbc: "07:15" }, { masdar: "07:30", cbc: "07:45" },
-        { masdar: "08:00", cbc: "08:15" }, { masdar: "08:30", cbc: "08:45" }, { masdar: "09:00", cbc: "09:15" },
-        { masdar: "09:30", cbc: "09:45" }, { masdar: "10:00", cbc: "10:15" }, { masdar: "10:30", cbc: "10:45" },
-        { masdar: "11:00", cbc: "11:15" }, { masdar: "11:30", cbc: "11:45" }, { masdar: "11:50", cbc: "12:05" },
-        { masdar: "12:10", cbc: "12:25" }, { masdar: "12:30", cbc: "12:45" }, { masdar: "13:00", cbc: "13:15" },
-        { masdar: "13:30", cbc: "13:45" }, { masdar: "14:00", cbc: "14:15" }, { masdar: "14:30", cbc: "14:45" },
-        { masdar: "15:00", cbc: "15:15" }, { masdar: "15:30", cbc: "15:45" }, { masdar: "16:00", cbc: "16:15" },
-        { masdar: "16:30", cbc: "16:45" }, { masdar: "17:00", cbc: "17:15" }, { masdar: "17:30", cbc: "17:45" },
-        { masdar: "18:00", cbc: "18:15" }, { masdar: "18:20", cbc: "18:35" }, { masdar: "18:40", cbc: "18:55" },
-        { masdar: "19:00", cbc: "19:15" }, { masdar: "19:20", cbc: "19:35" }, { masdar: "19:40", cbc: "19:55" },
-        { masdar: "20:00", cbc: "20:15" }, { masdar: "20:30", cbc: "20:45" }, { masdar: "21:00", cbc: "21:15" },
-        { masdar: "21:30", cbc: "21:45" }, { masdar: "22:00", cbc: "22:15" }, { masdar: "22:30", cbc: "22:45" },
-        { masdar: "23:00", cbc: "23:15" }, { masdar: "23:20", cbc: "23:35" }, { masdar: "23:40", cbc: "23:55" }
-    ];
-
-    const cbcToMasdarPairs = [
-        { cbc: "00:00", masdar: "00:15" }, { cbc: "00:20", masdar: "00:35" }, { cbc: "00:40", masdar: "00:55" },
-        { cbc: "01:00", masdar: "01:15" }, { cbc: "01:30", masdar: "01:45" }, { cbc: "02:00", masdar: "02:15" },
-        { cbc: "02:30", masdar: "02:45" }, { cbc: "03:00", masdar: "03:15" }, { cbc: "03:30", masdar: "03:45" },
-        { cbc: "04:00", masdar: "04:15" }, { cbc: "04:30", masdar: "04:45" }, { cbc: "05:00", masdar: "05:15" },
-        { cbc: "05:30", masdar: "05:45" }, { cbc: "06:00", masdar: "06:15" }, { cbc: "06:30", masdar: "06:45" },
-        { cbc: "07:00", masdar: "07:15" }, { cbc: "07:20", masdar: "07:35" }, { cbc: "07:40", masdar: "07:55" },
-        { cbc: "08:00", masdar: "08:15" }, { cbc: "08:30", masdar: "08:45" }, { cbc: "09:00", masdar: "09:15" },
-        { cbc: "09:30", masdar: "09:45" }, { cbc: "10:00", masdar: "10:15" }, { cbc: "10:30", masdar: "10:45" },
-        { cbc: "11:00", masdar: "11:15" }, { cbc: "11:30", masdar: "11:45" }, { cbc: "12:00", masdar: "12:15" },
-        { cbc: "12:30", masdar: "12:45" }, { cbc: "13:00", masdar: "13:15" }, { cbc: "13:30", masdar: "13:45" },
-        { cbc: "14:00", masdar: "14:15" }, { cbc: "14:30", masdar: "14:45" }, { cbc: "15:00", masdar: "15:15" },
-        { cbc: "15:30", masdar: "15:45" }, { cbc: "16:00", masdar: "16:15" }, { cbc: "16:30", masdar: "16:45" },
-        { cbc: "17:00", masdar: "17:15" }, { cbc: "17:30", masdar: "17:45" }, { cbc: "18:00", masdar: "18:15" },
-        { cbc: "18:30", masdar: "18:45" }, { cbc: "19:00", masdar: "19:15" }, { cbc: "19:20", masdar: "19:35" },
-        { cbc: "19:40", masdar: "19:55" }, { cbc: "20:00", masdar: "20:15" }, { cbc: "20:20", masdar: "20:35" },
-        { cbc: "20:40", masdar: "20:55" }, { cbc: "21:00", masdar: "21:15" }, { cbc: "21:20", masdar: "21:35" },
-        { cbc: "21:40", masdar: "21:55" }, { cbc: "22:00", masdar: "22:15" }, { cbc: "22:20", masdar: "22:35" },
-        { cbc: "22:40", masdar: "22:55" }, { cbc: "23:00", masdar: "23:15" }, { cbc: "23:30", masdar: "23:45" }
-    ];
-
-    const cbcToMasdarSchedule = cbcToMasdarPairs.map(item => item.cbc);
-
-    function updateRouteUI() {
-        const routeTitle = document.getElementById('routeTitle');
-        routeTitle.textContent = isMasdarToCBC ? 'Masdar 2 to CBC in' : 'CBC to Masdar 2 in';
-    }
-
-        function getBusTimes() {
-            const currentSchedule = isMasdarToCBC ? masdarToCBCSchedule.map(item => item.masdar) : cbcToMasdarSchedule;
-            const now = new Date();
-            const currentTimeInMinutes = now.getHours() * 60 + now.getMinutes() + (now.getSeconds() + now.getMilliseconds() / 1000) / 60;
-            let previousBus = { time: currentSchedule[currentSchedule.length - 1], minutes: 0 };
-            let nextBus = { time: currentSchedule[0], minutes: 0 };
-
-            for (let i = 0; i < currentSchedule.length; i++) {
-                const [hours, minutes] = currentSchedule[i].split(':').map(Number);
-                const busTimeInMinutes = hours * 60 + minutes;
-
-                if (busTimeInMinutes > currentTimeInMinutes) {
-                    nextBus = { time: currentSchedule[i], minutes: busTimeInMinutes };
-                    previousBus = { 
-                        time: currentSchedule[i-1] || currentSchedule[currentSchedule.length-1], 
-                        minutes: (i-1 >= 0 ? currentSchedule[i-1] : currentSchedule[currentSchedule.length-1])
-                            .split(':').map(Number).reduce((h,m) => h*60 + m)
-                    };
-                    break;
-                }
-            }
-
-            if (!nextBus.minutes) {
-                nextBus = { time: currentSchedule[0], minutes: currentSchedule[0].split(':').map(Number)[0] * 60 + 
-                           currentSchedule[0].split(':').map(Number)[1] + 1440 };
-                previousBus = { time: currentSchedule[currentSchedule.length-1], 
-                              minutes: currentSchedule[currentSchedule.length-1].split(':').map(Number)[0] * 60 + 
-                              currentSchedule[currentSchedule.length-1].split(':').map(Number)[1] };
-            }
-
-            return { previousBus, nextBus };
-        }
-
-        function updateSkyAndCelestial() {
-    const now = new Date();
-    const hours = now.getHours();
-    const minutes = now.getMinutes();
-    const totalMinutes = hours * 60 + minutes;
-
-    const celestial = document.getElementById('celestialBody');
-    const starsContainer = document.getElementById('starsContainer');
-    let gradient;
-
-    // Define time periods (in minutes since midnight)
-    const sunriseStart = 5 * 60; // 5:00 AM
-    const sunriseEnd = 7 * 60; // 7:00 AM
-    const dayEnd = 17 * 60; // 5:00 PM
-    const sunsetEnd = 19 * 60; // 7:00 PM
-    const dayLength = 12 * 60; // For celestial movement
-
-    // Helper function to interpolate between two colors
-    function interpolateColor(color1, color2, factor) {
-        const result = color1.slice(1).match(/.{2}/g).map((hex, i) => {
-            const c1 = parseInt(hex, 16);
-            const c2 = parseInt(color2.slice(1).match(/.{2}/g)[i], 16);
-            const value = Math.round(c1 + (c2 - c1) * factor);
-            return value.toString(16).padStart(2, '0');
-        });
-        return `#${result.join('')}`;
-    }
-
-    // Determine time period and set gradient
-    if (totalMinutes >= sunriseStart && totalMinutes < sunriseEnd) {
-        // Sunrise: Warm orange, pink, yellow
-        const factor = (totalMinutes - sunriseStart) / (sunriseEnd - sunriseStart);
-        const topColor = interpolateColor('#ff4500', '#ffd700', factor); // Orange to yellow
-        const bottomColor = interpolateColor('#ff69b4', '#87ceeb', factor); // Pink to light blue
-        gradient = `linear-gradient(to bottom, ${topColor}, ${bottomColor})`;
-        celestial.textContent = '☀️';
-        starsContainer.style.display = 'none';
-    } else if (totalMinutes >= sunriseEnd && totalMinutes < dayEnd) {
-        // Daytime: Bright blue tones
-        const factor = (totalMinutes - sunriseEnd) / (dayEnd - sunriseEnd);
-        const topColor = interpolateColor('#87ceeb', '#4682b4', factor); // Light to medium blue
-        const bottomColor = interpolateColor('#b0e0e6', '#1e90ff', factor); // Cyan to deep blue
-        gradient = `linear-gradient(to bottom, ${topColor}, ${bottomColor})`;
-        celestial.textContent = '☀️';
-        starsContainer.style.display = 'none';
-    } else if (totalMinutes >= dayEnd && totalMinutes < sunsetEnd) {
-        // Sunset: Reddish, golden, purple
-        const factor = (totalMinutes - dayEnd) / (sunsetEnd - dayEnd);
-        const topColor = interpolateColor('#ffd700', '#ff4500', factor); // Yellow to orange-red
-        const bottomColor = interpolateColor('#ff8c00', '#4b0082', factor); // Orange to indigo
-        gradient = `linear-gradient(to bottom, ${topColor}, ${bottomColor})`;
-        celestial.textContent = '☀️';
-        starsContainer.style.display = 'none';
-    } else {
-        // Night: Deep blue and indigo
-        const factor = ((totalMinutes < sunriseStart ? totalMinutes + 1440 : totalMinutes) - sunsetEnd) / (sunriseStart + 1440 - sunsetEnd);
-        const topColor = interpolateColor('#191970', '#000033', factor); // Midnight blue to darker blue
-        const bottomColor = interpolateColor('#000080', '#1c2526', factor); // Navy to dark teal
-        gradient = `linear-gradient(to bottom, ${topColor}, ${bottomColor})`;
-        celestial.textContent = '🌙';
-        starsContainer.style.display = 'block';
-        if (!starsCreated) {
-            createStars();
-            starsCreated = true;
-        }
-    }
-
-    // Apply gradient with smooth transition
-    const backgroundContainer = document.getElementById('background-container');
-    backgroundContainer.style.transition = 'background 5s ease';
-    backgroundContainer.style.background = gradient;
-
-    // Update celestial body position
-    let progress;
-    if (totalMinutes >= sunriseStart && totalMinutes < sunsetEnd) {
-        progress = (totalMinutes - sunriseStart) / (sunsetEnd - sunriseStart);
-    } else {
-        const adjustedMinutes = totalMinutes < sunriseStart ? totalMinutes + 1440 : totalMinutes;
-        progress = (adjustedMinutes - sunsetEnd) / (sunriseStart + 1440 - sunsetEnd);
-    }
-    progress = Math.max(0, Math.min(1, progress));
-
-    const xPos = 5 + progress * 90;
-    const yPos = 90 - 80 * 4 * progress * (1 - progress);
-
-    celestial.style.left = `${xPos}vw`;
-    celestial.style.top = `${yPos}vh`;
-    celestial.style.display = 'block';
-}
-
-        function updateCountdown() {
-            const now = new Date();
-            const currentTimeInMinutes = now.getHours() * 60 + now.getMinutes() + (now.getSeconds() + now.getMilliseconds() / 1000) / 60;
-            const { previousBus, nextBus } = getBusTimes();
-            let timeDifference = nextBus.minutes - currentTimeInMinutes;
-
-            if (timeDifference < 0) {
-                timeDifference += 1440;
-            }
-
-            const minutes = Math.floor(timeDifference % 60);
-            const seconds = Math.floor((timeDifference * 60) % 60);
-
-            document.getElementById('countdown').textContent = 
-                `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-            document.getElementById('nextBus').textContent = `Next bus at ${nextBus.time}`;
-
-            const totalDuration = (nextBus.minutes - previousBus.minutes + 1440) % 1440;
-            const elapsed = (currentTimeInMinutes - previousBus.minutes + 1440) % 1440;
-            const percentage = (elapsed / totalDuration) * 100;
-            const busPosition = Math.min(Math.max(percentage, 0), 100) * 2.76;
-
-            const progressFill = document.getElementById('progressFill');
-            progressFill.style.width = `${Math.min(Math.max(percentage, 0), 100)}%`;
-
-            const remainingMinutes = timeDifference;
-            if (remainingMinutes <= 3 && remainingMinutes > 2.9167) {
-                progressFill.style.transition = 'background-color 5s linear';
-                progressFill.style.backgroundColor = 'rgb(255, 0, 0)';
-            } else if (remainingMinutes > 3) {
-                const startColor = 204;
-                const endColor = 51;
-                const colorValue = Math.round(startColor - (startColor - endColor) * (percentage / 100));
-                progressFill.style.backgroundColor = `rgb(${colorValue}, ${colorValue}, ${colorValue})`;
-                progressFill.style.transition = 'background-color 0.5s linear';
-            } else if (remainingMinutes <= 2.9167) {
-                progressFill.style.backgroundColor = 'rgb(255, 0, 0)';
-                progressFill.style.transition = 'none';
-            }
-
-            document.getElementById('busEmoji').style.left = `${busPosition}px`;
-            
-            updateSkyAndCelestial();
-        }
-
-        function createStars() {
-            const starsContainer = document.getElementById('starsContainer');
-            const numberOfStars = 50;
-
-            for (let i = 0; i < numberOfStars; i++) {
-                const star = document.createElement('div');
-                star.className = 'star';
-
-                const x = Math.random() * 100;
-                const y = Math.random() * 100;
-                const size = Math.random() * 3 + 1;
-
-                star.style.left = `${x}vw`;
-                star.style.top = `${y}vh`;
-                star.style.width = `${size}px`;
-                star.style.height = `${size}px`;
-
-                const delay = Math.random() * 3;
-                star.style.animationDelay = `${delay}s`;
-
-                starsContainer.appendChild(star);
-            }
-        }
-
-        function findClosestBusTimes(inputTime) {
-            const [inputHours, inputMinutes] = inputTime.split(':').map(Number);
-            const targetTimeInMinutes = inputHours * 60 + inputMinutes;
-            const maxDelayMinutes = 50;
-
-            const schedule = (isMasdarToCBC ? masdarToCBCSchedule : cbcToMasdarPairs).map(item => {
-                const from = isMasdarToCBC ? item.masdar : item.cbc;
-                const to = isMasdarToCBC ? item.cbc : item.masdar;
-                return {
-                    from,
-                    to,
-                    fromMinutes: from.split(':').map(Number)[0] * 60 + from.split(':').map(Number)[1],
-                    toMinutes: to.split(':').map(Number)[0] * 60 + to.split(':').map(Number)[1]
-                };
-            });
-
-            schedule.push({
-                from: schedule[0].from,
-                to: schedule[0].to,
-                fromMinutes: schedule[0].fromMinutes + 1440,
-                toMinutes: schedule[0].toMinutes + 1440
-            });
-
-            const validTimes = schedule.filter(item => {
-                const diff = item.toMinutes - targetTimeInMinutes;
-                return diff >= 0 && diff <= maxDelayMinutes;
-            });
-
-            validTimes.sort((a, b) => a.fromMinutes - b.fromMinutes);
-
-            return validTimes.slice(0, 3).map(item => ({ from: item.from, to: item.to }));
-        }
-
-        document.getElementById('playButton').addEventListener('click', function() {
-            document.querySelector('.input-container').style.display = 'none';
-            document.getElementById('closestTimes').style.display = 'none';
-            const eGateButton = document.getElementById('eGateButton');
-            eGateButton.style.display = 'inline-block';
-            eGateButton.style.width = '100px';
-            eGateButton.style.height = '24px';
-            eGateButton.style.background = 'white';
-        });
-
-        document.getElementById('busTimeInput').addEventListener('change', function() {
-            const input = document.getElementById('busTimeInput').value.trim();
-            const closestTimesDiv = document.getElementById('closestTimes');
-
-            if (!input) {
-                closestTimesDiv.textContent = '';
-                closestTimesDiv.style.display = 'none';
-                return;
-            }
-
-            const closestTimes = findClosestBusTimes(input);
-            if (closestTimes.length === 0) {
-                closestTimesDiv.textContent = '';
-                closestTimesDiv.style.display = 'none';
-            } else {
-                const result = closestTimes.map(item => `${item.from} ➡️ ${item.to}`).join(', ');
-                closestTimesDiv.textContent = result;
-                closestTimesDiv.style.display = 'block';
-            }
-        });
-
-        document.getElementById('toggleRoute').addEventListener('click', function() {
-            isMasdarToCBC = !isMasdarToCBC;
-            updateRouteUI();
-            updateCountdown();
-        });
-
-        document.getElementById('eGateButton').addEventListener('click', function() {
-            document.getElementById('eGateButton').style.display = 'none';
-            document.querySelector('.input-container').style.display = 'flex';
-        });
-
-        // Popup logic with black background
-        function showFirstVisitPopup() {
-            const isPWA = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
-            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-            if (!localStorage.getItem('hasVisited') && !isPWA && isIOS) {
-                const popup = document.getElementById('firstVisitPopup');
-                popup.style.display = 'block';
-                document.body.classList.add('black-background');
-            }
-        }
-
-        document.getElementById('closePopup').addEventListener('click', function() {
-            const popup = document.getElementById('firstVisitPopup');
-            popup.style.display = 'none';
-            document.body.classList.remove('black-background');
-            localStorage.setItem('hasVisited', 'true');
-        });
-
-        window.onload = function() {
-            window.scrollTo(0, 0);
-            updateRouteUI();
-            updateSkyAndCelestial();
-            updateCountdown();
-            showFirstVisitPopup();
-            const now = new Date();
-            if (now.getHours() < 6 || now.getHours() >= 18) {
-                createStars();
+        const ROUTES = {
+            "1": { 
+                name: "Masdar 2", 
+                stops: ['CBC (Dep)', 'Masdar 2', 'CBC (Arr)'], 
+                fromCBC: ["00:00", "00:20", "00:40", "01:00", "01:30", "02:00", "02:30", "03:00", "03:30", "04:00", "04:30", "05:00", "05:30", "06:00", "06:30", "07:00", "07:20", "07:40", "08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:20", "19:40", "20:00", "20:20", "20:40", "21:00", "21:20", "21:40", "22:00", "22:20", "22:40", "23:00", "23:30"],
+                toCBC: ["00:00", "00:20", "00:40", "01:00", "01:30", "02:00", "02:30", "03:00", "03:30", "04:00", "04:30", "05:00", "05:30", "06:00", "06:20", "06:40", "07:00", "07:30", "08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "11:50", "12:10", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:20", "18:40", "19:00", "19:20", "19:40", "20:00", "20:30", "21:00", "21:30", "22:00", "22:30", "23:00", "23:20", "23:40"]
             }
         };
-
-        let intervalId = null;
-        function startUpdateLoop() {
-            if (intervalId) clearInterval(intervalId);
-            intervalId = setInterval(updateCountdown, 100);
-        }
-
-        startUpdateLoop();
-
-        document.body.addEventListener('touchmove', function(event) {
-            if (!event.target.closest('#events-container')) {
-                event.preventDefault();
+        let activeRouteId="1",stopsData=[],schedule=[],stopNamesMap={},stopIndices={},currentDirection='from_cbc',currentStop='stop1',nextTripData={id:null,minutes:0,departs:'',arrives:''},nextTripTargetDate=null,activeBuses=[],forceScroll=!0,lastAutoScrolledId=null;
+        let eGateTimeMinutes=localStorage.getItem('crewbus_egate_time')?parseInt(localStorage.getItem('crewbus_egate_time')):null;
+        let routeMode = localStorage.getItem('crewbus_route_mode') || 'auto';
+        let screensaverAnimationInterval = null;
+        let currentScreensaverScene = null;
+        let screensaverTrigger = null;
+        const SCREENSAVER_SCENES = [
+            { img: 'assets/crewsun.png', text: 'ENJOY YOUR TIME', disco: false, waves: false, vines: false },
+            { img: 'assets/crewdrink.png', text: 'PARTY TIME!', disco: true, waves: false, vines: false },
+            { img: 'assets/crewuntie.png', text: 'YOU CAN RELAAAAAX', disco: false, waves: false, vines: false },
+            { img: 'assets/crewduck.png', text: 'ON DUCK DUTY TODAY', disco: false, waves: true, vines: false },
+            { img: 'assets/crewexplorer.png', text: 'NEVER STOP EXPLORING', disco: false, waves: false, vines: true }
+        ];
+        const RAINBOW_COLORS = ['#ef4444', '#f97316', '#facc15', '#4ade80', '#0ea5e9', '#8b5cf6', '#ec4899'];
+        
+        function updateVH(){document.documentElement.style.setProperty('--vh',`${window.innerHeight*.01}px`);}
+        function switchRoute(id,initStop=null){
+            activeRouteId=id;localStorage.setItem('etihad_saved_route',activeRouteId);
+            const rData=ROUTES[activeRouteId];stopsData=rData.stops;stopNamesMap={};stopIndices={};
+            const sel=document.getElementById('stop-selector');sel.innerHTML='';
+            for(let i=1;i<stopsData.length-1;i++){
+                let k=`stop${i}`,n=stopsData[i];stopNamesMap[k]=n;stopIndices[k]=i;
+                sel.appendChild(new Option(n,k));
             }
-        }, { passive: false });
-
-        // Calendar JavaScript
-        const calendarWindow = document.getElementById('calendar-window');
-        const calendarTitleBar = document.getElementById('title-bar');
-        const calendarToggleDayButton = document.getElementById('toggle-day');
-        const calendarEventsList = document.getElementById('events-list');
-        const calendarCurrentDate = document.getElementById('current-date');
-        const calendarTitle = document.getElementById('title');
-
-        const calendarUrl = 'https://p108-caldav.icloud.com/published/2/MTUxMDYwNTYxNDE1MTA2MOcLt9DeC6aDOBzlZCUDejDdugx2IBT9HDhJA6jGIXwDHsR2_c0JH71EnIqBSkhBPTX-OE44UuANI0LecwDIOcg';
-
-        let isCalendarDragging = false;
-        let currentCalendarX;
-        let currentCalendarY;
-        let initialCalendarX;
-        let initialCalendarY;
-        let showingToday = true;
-
-        function initCalendarDraggable() {
-            calendarTitleBar.addEventListener('mousedown', startCalendarDragging);
-            document.addEventListener('mousemove', dragCalendar);
-            document.addEventListener('mouseup', stopCalendarDragging);
-            calendarTitleBar.addEventListener('touchstart', startCalendarDragging, { passive: false });
-            document.addEventListener('touchmove', dragCalendar, { passive: false });
-            document.addEventListener('touchend', stopCalendarDragging);
-            calendarToggleDayButton.addEventListener('click', toggleCalendarDay);
-        }
-
-        function startCalendarDragging(e) {
-            if (e.type === 'touchstart') {
-                e.preventDefault();
+            currentStop=(initStop&&stopNamesMap[initStop])?initStop:'stop1';
+            localStorage.setItem('etihad_saved_stop',currentStop);sel.value=currentStop;
+            
+            function padTime(mins) {
+                let h = Math.floor(mins / 60) % 24;
+                return `${h.toString().padStart(2,'0')}:${(mins % 60).toString().padStart(2,'0')}`;
             }
-            let clientX, clientY;
-            if (e.type === 'mousedown') {
-                clientX = e.clientX;
-                clientY = e.clientY;
-            } else if (e.type === 'touchstart' && e.touches.length === 1) {
-                clientX = e.touches[0].clientX;
-                clientY = e.touches[0].clientY;
-            } else {
-                return;
-            }
-            const rect = calendarWindow.getBoundingClientRect();
-            initialCalendarX = clientX - rect.left;
-            initialCalendarY = clientY - rect.top;
-            if (e.target === calendarTitleBar || e.target === calendarTitle) {
-                isCalendarDragging = true;
-                calendarWindow.style.cursor = 'move';
-                calendarWindow.style.transform = 'none';
-            }
-        }
 
-        function dragCalendar(e) {
-            if (isCalendarDragging) {
-                e.preventDefault();
-                let clientX, clientY;
-                if (e.type === 'mousemove') {
-                    clientX = e.clientX;
-                    clientY = e.clientY;
-                } else if (e.type === 'touchmove' && e.touches.length === 1) {
-                    clientX = e.touches[0].clientX;
-                    clientY = e.touches[0].clientY;
+            const timesList = currentDirection === 'from_cbc' ? rData.fromCBC : rData.toCBC;
+            schedule = timesList.map((time, index) => {
+                let arrStr = padTime(timeToMinutes(time) + 15);
+                let o = { id: index };
+                if (currentDirection === 'from_cbc') {
+                    o.departs = time; o.stop1 = arrStr; o.arrives = arrStr; o.times = [time, arrStr, arrStr];
                 } else {
-                    return;
+                    o.departs = time; o.stop1 = time; o.arrives = arrStr; o.times = [time, time, arrStr];
                 }
-                currentCalendarX = clientX - initialCalendarX;
-                currentCalendarY = clientY - initialCalendarY;
-                const maxX = window.innerWidth - calendarWindow.offsetWidth;
-                const maxY = window.innerHeight - calendarWindow.offsetHeight;
-                currentCalendarX = Math.min(Math.max(0, currentCalendarX), maxX);
-                currentCalendarY = Math.min(Math.max(0, currentCalendarY), maxY);
-                calendarWindow.style.left = currentCalendarX + 'px';
-                calendarWindow.style.top = currentCalendarY + 'px';
+                return o;
+            });
+            
+            document.getElementById('header-accommodation-list').innerText=stopsData.slice(1,-1).join(' • ');
+            document.getElementById('header-route-name').innerText=`Route ${activeRouteId}`;
+            const sL=currentDirection==='from_cbc'?'CBC':stopNamesMap[currentStop].toUpperCase();
+            const eL=currentDirection==='from_cbc'?stopNamesMap[currentStop].toUpperCase():'CBC';
+            const pinIcon = `<svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>`;
+            document.getElementById('mobile-label-start').innerHTML=`${pinIcon} ${sL}`;
+            document.getElementById('mobile-label-end').innerHTML=`${eL} ${pinIcon}`;
+            forceScroll=!0;renderRouteMap(!0);updateTime();
+            if(typeof updateHomeButtonUI === 'function') updateHomeButtonUI();
+        }
+        function setDirection(d,skipUpdate=!1){
+            currentDirection=d;localStorage.setItem('etihad_saved_direction',d);
+            const bf=document.getElementById('btn-from-eghq'),bt=document.getElementById('btn-to-eghq');
+            if(d==='from_cbc'){
+                bf.className="flex-1 py-1 sm:py-1.5 lg:py-2 text-[10px] sm:text-sm font-bold rounded lg:rounded-md bg-white dark:bg-neutral-800 shadow dark:shadow-none text-neutral-900 dark:text-white transition-all whitespace-nowrap text-center";
+                bt.className="flex-1 py-1 sm:py-1.5 lg:py-2 text-[10px] sm:text-sm font-medium rounded lg:rounded-md text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-all whitespace-nowrap text-center";
+            } else {
+                bt.className="flex-1 py-1 sm:py-1.5 lg:py-2 text-[10px] sm:text-sm font-bold rounded lg:rounded-md bg-white dark:bg-neutral-800 shadow dark:shadow-none text-neutral-900 dark:text-white transition-all whitespace-nowrap text-center";
+                bf.className="flex-1 py-1 sm:py-1.5 lg:py-2 text-[10px] sm:text-sm font-medium rounded lg:rounded-md text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-all whitespace-nowrap text-center";
+            }
+            if(!skipUpdate)switchRoute(activeRouteId,currentStop);
+        }
+        function setRouteMode(mode) {
+            routeMode = mode;
+            localStorage.setItem('crewbus_route_mode', mode);
+            const btnAuto = document.getElementById('btn-mode-auto');
+            const btnManual = document.getElementById('btn-mode-manual');
+            const controls = document.getElementById('manual-controls');
+            if(!btnAuto || !btnManual || !controls) return;
+            const actClass = "flex-1 py-1 sm:py-1.5 lg:py-2 text-[10px] sm:text-sm font-bold rounded lg:rounded-md bg-white dark:bg-neutral-800 shadow dark:shadow-none text-neutral-900 dark:text-white transition-all whitespace-nowrap text-center flex items-center justify-center gap-1.5";
+            const inactClass = "flex-1 py-1 sm:py-1.5 lg:py-2 text-[10px] sm:text-sm font-medium rounded lg:rounded-md text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-all whitespace-nowrap text-center flex items-center justify-center gap-1.5";
+            if(mode === 'auto') {
+                btnAuto.className = actClass;
+                btnManual.className = inactClass;
+                controls.classList.add('hidden');
+                if(typeof autoDetectDirection === 'function') autoDetectDirection();
+            } else {
+                btnManual.className = actClass;
+                btnAuto.className = inactClass;
+                controls.classList.remove('hidden');
             }
         }
-
-        function stopCalendarDragging() {
-            if (isCalendarDragging) {
-                isCalendarDragging = false;
-                calendarWindow.style.cursor = 'default';
-            }
+        function setStop(s){currentStop=s;localStorage.setItem('etihad_saved_stop',s);forceScroll=!0;switchRoute(activeRouteId,s);}
+        function timeToMinutes(t){if(!t||t.trim()===''||t.includes('--'))return -1;const[h,m]=t.replace('*','').split(':').map(Number);return h*60+m;}
+        function calculateNextBus(){
+            const now=new Date(),currMin=now.getHours()*60+now.getMinutes();
+            let evts=schedule.map(t=>{
+                let dStr=currentDirection==='from_cbc'?t.departs:t[currentStop];
+                let aStr=currentDirection==='from_cbc'?t[currentStop]:t.arrives;
+                return {id:t.id,time:timeToMinutes(dStr),dStr:dStr.replace('*','--:--'),aStr:aStr.replace('*','--:--')};
+            }).sort((a,b)=>a.time-b.time);
+            let f=evts.find(e=>e.time>currMin);
+            if(f)nextTripData={id:f.id,minutes:f.time-currMin,departs:f.dStr,arrives:f.aStr};
+            else nextTripData={id:evts[0].id,minutes:(evts[0].time+1440)-currMin,departs:evts[0].dStr,arrives:evts[0].aStr};
+            let tg=f||evts[0];let d=new Date();d.setHours(Math.floor(tg.time/60),tg.time%60,0,0);
+            if(!f)d.setDate(d.getDate()+1);
+            nextTripTargetDate=d;
         }
-
-        function updateCalendarDate() {
-            const dateElement = calendarCurrentDate;
-            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            const date = showingToday ? new Date() : new Date(Date.now() + 24 * 60 * 60 * 1000);
-            dateElement.textContent = date.toLocaleDateString(navigator.language || 'en-US', options);
-            calendarTitle.textContent = showingToday ? "Today's Events" : "Tomorrow's Events";
-            calendarToggleDayButton.textContent = showingToday ? "Tomorrow ➡️" : "Today ⬅️";
-        }
-
-        function formatCalendarTime(date) {
-            if (!(date instanceof Date) || isNaN(date)) {
-                return 'Invalid time';
-            }
-            return date.toLocaleTimeString(navigator.language || 'en-US', {
-                hour: 'numeric',
-                minute: '2-digit',
-                hour12: true
+        function calculateActiveBuses(){
+            const now=new Date(),currMin=now.getHours()*60+now.getMinutes()+(now.getSeconds()/60);activeBuses=[];
+            schedule.forEach(trip=>{
+                let ts=trip.times.map(t=>timeToMinutes(t));
+                for(let i=1;i<ts.length;i++)if(ts[i]<ts[i-1])ts[i]+=1440;
+                let s=ts[0],e=ts[ts.length-1],c=(currMin+1440>=s&&currMin+1440<=e)?currMin+1440:currMin;
+                if(c>=s&&c<=e){
+                    let sIdx=0,p=0;
+                    for(let i=0;i<ts.length-1;i++)if(c>=ts[i]&&c<=ts[i+1]){sIdx=i;let dur=ts[i+1]-ts[i];p=dur===0?1:(c-ts[i])/dur;break;}
+                    activeBuses.push({tripId:trip.id,segmentIndex:sIdx,progress:p});
+                }
             });
         }
-
-        async function fetchCalendarEvents() {
-            calendarEventsList.innerHTML = '<div class="loading">Loading events...</div>';
-            try {
-                const proxyUrl = 'https://api.allorigins.win/raw?url=';
-                const response = await fetch(proxyUrl + encodeURIComponent(calendarUrl));
-                if (!response.ok) {
-                    throw new Error(`Network response was not ok: ${response.status} ${response.statusText}`);
+        function scrollToFocusBus(){
+            setTimeout(()=>{
+                const dc=document.getElementById('desktop-table-container'),mc=document.getElementById('mobile-cards-container');
+                let dt,mt;
+                if(eGateTimeMinutes!==null){
+                    dt=dc.querySelector('tr[data-egate="true"]');mt=mc.querySelector('div[data-egate="true"]');
+                }else{
+                    dt=document.getElementById('next-bus-row-desktop');mt=document.getElementById('next-bus-row-mobile');
                 }
-                const icsData = await response.text();
-                if (!icsData) {
-                    throw new Error('Empty response received');
-                }
-                const events = parseICS(icsData);
-                displayCalendarEvents(events);
-            } catch (error) {
-                console.error('Error fetching calendar:', error);
-                calendarEventsList.innerHTML = `<div class="loading">Unable to load events: ${error.message}</div>`;
-            }
+                if(dt&&dc)dc.scrollTop=dt.offsetTop-(dc.clientHeight/2)+(dt.clientHeight/2);
+                if(mt&&mc)mc.scrollTop=mt.offsetTop-(mc.clientHeight/2)+(mt.clientHeight/2);
+            },50);
         }
-
-        function parseICS(icsData) {
-            const events = [];
-            const lines = icsData.replace(/\r\n/g, '\n').replace(/\r/g, '\n').split('\n');
-            let currentEvent = null;
-            let currentLine = '';
-            for (let i = 0; i < lines.length; i++) {
-                let line = lines[i];
-                if (line.startsWith(' ') || line.startsWith('\t')) {
-                    if (currentLine) {
-                        currentLine += line.substring(1);
-                    }
-                    continue;
-                } else {
-                    if (currentLine) {
-                        processICSLine(currentLine, currentEvent);
-                    }
-                    currentLine = line;
+        function updateTime(){calculateNextBus();calculateActiveBuses();updateBusPositions();renderAll();if(forceScroll||nextTripData.id!==lastAutoScrolledId){scrollToFocusBus();lastAutoScrolledId=nextTripData.id;forceScroll=!1;}}
+        function updateLiveCountdown(){
+            const now=new Date();document.getElementById('current-time-display').innerText=now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:!1});
+            if(!nextTripTargetDate)return;
+            let dMs=nextTripTargetDate-now;if(dMs<=0){updateTime();return;}
+            let tSec=Math.floor(dMs/1000),h=Math.floor(tSec/3600),m=Math.floor((tSec%3600)/60),s=tSec%60,tMinL=tSec/60;
+            let f=(h>0?`${h}h `:'')+`${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+            document.getElementById('banner-minutes').innerText=`in ${f}`;
+            if(document.getElementById('fs-countdown'))document.getElementById('fs-countdown').innerText=f;
+            const b=document.getElementById('fs-countdown-box');
+            if(b)b.className=`flex flex-col items-center justify-center p-8 sm:p-12 rounded-3xl w-full mx-auto transition-all duration-500 shadow-xl ${tMinL<=5?'bg-red-600 dark:bg-red-700 border border-white/20 shadow-2xl':tMinL<=10?'bg-amber-600 dark:bg-amber-700 border border-white/20':'bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-white/10 dark:shadow-2xl'}`;
+        }
+        function toggleFullscreen(){const f=document.getElementById('fullscreen-overlay');if(f.classList.contains('hidden')){f.classList.remove('hidden');f.classList.add('flex');}else{f.classList.add('hidden');f.classList.remove('flex');}}
+        function renderBanner(){
+            const b=document.getElementById('next-bus-banner');
+            if(nextTripData.id!==null){
+                b.classList.remove('hidden');b.classList.add('flex');
+                const cn=stopNamesMap[currentStop],tTxt=currentDirection==='from_cbc'?'Departure from CBC':`Departure from ${cn}`,aTxt=currentDirection==='from_cbc'?`Arr at ${cn}`:'Arr at CBC';
+                document.getElementById('banner-title').innerText=tTxt;
+                document.getElementById('banner-arrival-label').innerText=aTxt;
+                document.getElementById('banner-arrival-label-desk').innerText=aTxt;
+                document.getElementById('banner-departs').innerText=nextTripData.departs;
+                document.getElementById('banner-arrives').innerText=nextTripData.arrives;
+                document.getElementById('fs-title').innerText=tTxt;
+                document.getElementById('fs-arrival-label').innerText=aTxt;
+                document.getElementById('fs-departs').innerText=nextTripData.departs;
+                document.getElementById('fs-arrives').innerText=nextTripData.arrives;
+                updateLiveCountdown();
+            }else{b.classList.add('hidden');b.classList.remove('flex');}
+        }
+        function highlightSelectedStop(){
+            const si=stopIndices[currentStop],sCt=stopsData.length,mTxt=sCt>6?'text-[6px]':sCt>4?'text-[7px]':'text-[8px]';
+            stopsData.forEach((s,i)=>{
+                const d=document.getElementById(`stop-dot-${i}`),t=document.getElementById(`stop-text-${i}`);
+                if(!d||!t)return;
+                const isE=i===0||i===stopsData.length-1;
+                if(i===si){
+                    d.className="w-2 h-2 sm:w-4 sm:h-4 lg:w-4 lg:h-4 rounded-full border z-10 scale-[1.3] sm:scale-[1.5] bg-blue-500 border-blue-200 dark:border-blue-900 shadow-[0_0_8px_rgba(59,130,246,0.8)]";
+                    t.className=`absolute top-3 sm:top-6 lg:top-6 w-12 sm:w-24 lg:w-24 text-center ${mTxt} sm:text-xs font-extrabold text-blue-600 dark:text-blue-500 scale-110 whitespace-nowrap`;
+                } else if(isE){
+                    d.className="w-2 h-2 sm:w-4 sm:h-4 lg:w-4 lg:h-4 rounded-full border z-10 bg-red-600 border-red-900 dark:border-black";
+                    t.className=`absolute top-3 sm:top-6 lg:top-6 w-12 sm:w-24 lg:w-24 text-center ${mTxt} sm:text-xs font-semibold text-red-600 whitespace-nowrap`;
+                } else{
+                    d.className="w-2 h-2 sm:w-4 sm:h-4 lg:w-4 lg:h-4 rounded-full border z-10 bg-neutral-300 dark:bg-neutral-700 border-neutral-400 dark:border-neutral-800";
+                    t.className=`absolute top-3 sm:top-6 lg:top-6 w-12 sm:w-24 lg:w-24 text-center ${mTxt} sm:text-xs font-semibold text-neutral-400 dark:text-neutral-500 whitespace-nowrap`;
                 }
-                if (currentLine.toUpperCase() === 'BEGIN:VEVENT') {
-                    currentEvent = {};
-                    currentLine = '';
-                } else if (currentLine.toUpperCase() === 'END:VEVENT') {
-                    if (currentEvent && currentEvent.dtstart && currentEvent.summary) {
-                        if (!currentEvent.dtend && currentEvent.dtstartIsDate) {
-                            currentEvent.dtend = currentEvent.dtstart;
+            });
+        }
+        function renderRouteMap(f){
+            const c=document.getElementById('route-map-container');
+            if(f)c.innerHTML='';if(c.children.length>0)return;
+            c.innerHTML=stopsData.map((s,i)=>{
+                let h=`<div class="flex flex-col items-center relative flex-1"><div id="stop-dot-${i}"></div><span id="stop-text-${i}">${s}</span></div>`;
+                if(i<stopsData.length-1)h+=`<div class="flex-1 h-[1px] sm:h-1 bg-neutral-200 dark:bg-neutral-800 mx-0 rounded-full relative"><div id="segment-buses-${i}" class="absolute inset-0"></div></div>`;
+                return h;
+            }).join('');
+            highlightSelectedStop();
+        }
+        function updateBusPositions(){
+            for(let i=0;i<stopsData.length-1;i++){
+                let bs=activeBuses.filter(b=>b.segmentIndex===i),c=document.getElementById(`segment-buses-${i}`);
+                if(c){
+                    let ex=Array.from(c.children),ids=bs.map(b=>b.tripId.toString());
+                    ex.forEach(el=>{if(!ids.includes(el.dataset.tripId))el.remove();});
+                    bs.forEach(b=>{
+                        let el=document.getElementById(`bus-icon-${b.tripId}`);
+                        if(!el){
+                            el=document.createElement('div');el.id=`bus-icon-${b.tripId}`;el.dataset.tripId=b.tripId;el.className="absolute top-1/2 -translate-y-1/2 z-20 transition-all duration-1000 ease-linear";
+                            el.innerHTML=`<div class="relative flex items-center justify-center"><span class="animate-ping absolute inline-flex h-3 w-3 sm:h-6 sm:w-6 rounded-full bg-blue-400 opacity-60"></span><div class="bg-blue-600 text-white rounded-full p-0.5 sm:p-1 shadow-md border border-white dark:border-black relative z-10 flex items-center justify-center text-center"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-2 h-2 sm:w-3.5 sm:h-3.5"><path d="M8 6v6"/><path d="M15 6v6"/><path d="M2 12h19.6"/><path d="M18 18h3s.5-1.7.8-2.8c.1-.4.2-.8.2-1.2 0-.4-.1-.8-.2-1.2l-1.4-5C20.1 6.8 19.1 6 18 6H4a2 2 0 0 0-2 2v10h3"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg></div></div>`;
+                            c.appendChild(el);
                         }
-                        events.push(currentEvent);
-                    }
-                    currentEvent = null;
-                    currentLine = '';
-                }
-            }
-            if (currentLine) {
-                processICSLine(currentLine, currentEvent);
-            }
-            return events;
-        }
-
-        function processICSLine(line, eventObj) {
-            if (!eventObj || !line.includes(':')) return;
-            const [keyPart, ...valueParts] = line.split(':');
-            const value = valueParts.join(':');
-            const keyParts = keyPart.split(';');
-            const key = keyParts[0].toUpperCase();
-            if (key === 'DTSTART') {
-                const parsedDate = parseICSDate(value, keyPart);
-                eventObj.dtstart = parsedDate.date;
-                eventObj.dtstartIsDate = parsedDate.isDate;
-            } else if (key === 'DTEND') {
-                const parsedDate = parseICSDate(value, keyPart);
-                eventObj.dtend = parsedDate.date;
-                eventObj.dtendIsDate = parsedDate.isDate;
-            } else if (key === 'SUMMARY') {
-                eventObj.summary = value.replace(/\\,/g, ',').replace(/\\;/g, ';').replace(/\\n/g, '\n');
-            }
-        }
-
-        function parseICSDate(dateStr, keyPart) {
-            const isDateOnly = keyPart.toUpperCase().includes('VALUE=DATE');
-            const cleanStr = dateStr.replace('T', '').replace('Z', '');
-            const year = parseInt(cleanStr.substr(0, 4), 10);
-            const month = parseInt(cleanStr.substr(4, 2), 10) - 1;
-            const day = parseInt(cleanStr.substr(6, 2), 10);
-            if (isDateOnly) {
-                return { date: new Date(year, month, day), isDate: true };
-            } else {
-                const hour = parseInt(cleanStr.substr(8, 2) || '0', 10);
-                const minute = parseInt(cleanStr.substr(10, 2) || '0', 10);
-                const second = parseInt(cleanStr.substr(12, 2) || '0', 10);
-                if (dateStr.endsWith('Z')) {
-                    return { date: new Date(Date.UTC(year, month, day, hour, minute, second)), isDate: false };
-                } else {
-                    return { date: new Date(year, month, day, hour, minute, second), isDate: false };
+                        el.style.left=`calc(${b.progress*100}% - 4px)`;
+                    });
                 }
             }
         }
-
-        function isCalendarDateSameDay(date, referenceDate) {
-            if (!(date instanceof Date) || isNaN(date)) {
-                return false;
-            }
-            const compareDate = new Date(date);
-            compareDate.setHours(0, 0, 0, 0);
-            const refDate = new Date(referenceDate);
-            refDate.setHours(0, 0, 0, 0);
-            return compareDate.getTime() === refDate.getTime();
-        }
-
-        function displayCalendarEvents(events) {
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
-            const tomorrow = new Date(today.getTime() + 24 * 60 * 60 * 1000);
-            const targetDate = showingToday ? today : tomorrow;
-            const filteredEvents = events.filter(event => event.dtstart && isCalendarDateSameDay(event.dtstart, targetDate));
-            if (filteredEvents.length === 0) {
-                calendarEventsList.innerHTML = '<div class="loading">No events scheduled</div>';
-                return;
-            }
-            filteredEvents.sort((a, b) => {
-                if (a.dtstartIsDate && !b.dtstartIsDate) return -1;
-                if (!a.dtstartIsDate && b.dtstartIsDate) return 1;
-                if (a.dtstartIsDate && b.dtstartIsDate) return 0;
-                return a.dtstart.getTime() - b.dtstart.getTime();
-            });
-            calendarEventsList.innerHTML = filteredEvents.map(event => {
-                let timeString = '';
-                if (event.dtstartIsDate) {
-                    timeString = 'All Day';
-                } else {
-                    timeString = formatCalendarTime(event.dtstart);
-                    if (event.dtend && !event.dtendIsDate && event.dtend.getTime() !== event.dtstart.getTime()) {
-                        timeString += ` - ${formatCalendarTime(event.dtend)}`;
+        function renderDesktopTable(){
+            const th=document.getElementById('desktop-thead-tr'),cn=stopNamesMap[currentStop];
+            const pinIcon = `<svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>`;
+            const dL=`<div class="flex items-center gap-2 text-left">${pinIcon} CBC (Dep)</div>`,aL=`<div class="flex items-center gap-2 text-left">${pinIcon} CBC (Arr)</div>`,sL=`<div class="flex items-center gap-2 text-left">${pinIcon} ${cn}</div>`;
+            th.innerHTML=currentDirection==='from_cbc'?`<th class="px-6 py-4 font-bold text-red-600 w-1/2 bg-transparent text-left">${dL}</th><th class="px-6 py-4 font-bold text-blue-600 w-1/2 bg-transparent text-left">${sL}</th>`:`<th class="px-6 py-4 font-bold text-blue-600 w-1/2 bg-transparent text-left">${sL}</th><th class="px-6 py-4 font-bold text-red-600 w-1/2 bg-transparent text-left">${aL}</th>`;
+            let s=[...schedule].sort((a,b)=>timeToMinutes(currentDirection==='from_cbc'?a.departs:a[currentStop])-timeToMinutes(currentDirection==='from_cbc'?b.departs:b[currentStop]));
+            document.getElementById('desktop-tbody').innerHTML=s.map(t=>{
+                const n=t.id===nextTripData.id;let c1=currentDirection==='from_cbc'?t.departs:t[currentStop],c2=currentDirection==='from_cbc'?t[currentStop]:t.arrives;
+                c1=c1.replace('*','--:--');c2=c2.replace('*','--:--');
+                let isEg=!1,egB='',egAttr='';
+                if(eGateTimeMinutes!==null){
+                    let aMins=timeToMinutes(currentDirection==='from_cbc'?t[currentStop]:t.arrives),d=aMins-eGateTimeMinutes;
+                    if(d<-720)d+=1440;if(d>720)d-=1440;
+                    if(d>=-45&&d<=45){
+                        isEg=!0;egAttr='data-egate="true"';
+                        let l=d<0?`${Math.abs(d)}m early`:d===0?'Exact time':`${d}m after`;
+                        let c=(d>=-15&&d<=15)?'bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-400 border-green-200 dark:border-green-800':'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/50 dark:text-indigo-400 border-indigo-200 dark:border-indigo-800';
+                        egB=`<span class="inline-flex text-[10px] sm:text-xs font-bold ${c} px-2 py-0.5 rounded ml-3 border whitespace-nowrap shadow-sm">${l}</span>`;
                     }
                 }
-                return `
-                    <div class="event">
-                        <div class="event-title">${event.summary || 'No Title'}</div>
-                        <div class="event-time">${timeString}</div>
-                    </div>
-                `;
+                let rCls=n?'bg-blue-50 dark:bg-blue-900/20':isEg?'bg-indigo-50/40 dark:bg-indigo-900/10':'';
+                return `<tr ${n?'id="next-bus-row-desktop"':''} ${egAttr} class="transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-900/80 ${rCls}"><td class="px-6 py-4 font-bold text-lg ${n?'text-blue-600 dark:text-blue-400':'text-neutral-900 dark:text-neutral-100'} text-left">${c1}</td><td class="px-6 py-4 font-bold text-lg ${n?'text-blue-600 dark:text-blue-400':'text-neutral-900 dark:text-neutral-100'} text-left"><div class="flex items-center">${c2}${egB}</div></td></tr>`;
             }).join('');
         }
+        function renderMobileCards(){
+            const mc=document.getElementById('mobile-cards-container');
+            let s=[...schedule].sort((a,b)=>timeToMinutes(currentDirection==='from_cbc'?a.departs:a[currentStop])-timeToMinutes(currentDirection==='from_cbc'?b.departs:b[currentStop]));
+            mc.innerHTML=s.map(t=>{
+                const n=t.id===nextTripData.id;let c1=currentDirection==='from_cbc'?t.departs:t[currentStop],c2=currentDirection==='from_cbc'?t[currentStop]:t.arrives;
+                c1=c1.replace('*','--:--');c2=c2.replace('*','--:--');
+                let isEg=!1,egB='',egAttr='';
+                if(eGateTimeMinutes!==null){
+                    let aMins=timeToMinutes(currentDirection==='from_cbc'?t[currentStop]:t.arrives),d=aMins-eGateTimeMinutes;
+                    if(d<-720)d+=1440;if(d>720)d-=1440;
+                    if(d>=-45&&d<=45){
+                        isEg=!0;egAttr='data-egate="true"';
+                        let l=d<0?`${Math.abs(d)}m early`:d===0?'Exact time':`${d}m after`;
+                        let c=(d>=-15&&d<=15)?'bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-400 border-green-200 dark:border-green-800':'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/50 dark:text-indigo-400 border-indigo-200 dark:border-indigo-800';
+                        egB=`<div class="mt-1 text-right"><span class="inline-block text-[9px] font-bold ${c} px-1.5 py-0.5 rounded shadow-sm border">${l}</span></div>`;
+                    }
+                }
+                let rCls=n?'bg-blue-50 dark:bg-blue-900/20':isEg?'bg-indigo-50/40 dark:bg-indigo-900/10':'';
+                const arrowIcon = `<svg class="w-3 h-3 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-neutral-400 dark:text-neutral-600 ${n||isEg?'bg-transparent':'bg-white dark:bg-black'}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>`;
+                return `<div ${n?'id="next-bus-row-mobile"':''} ${egAttr} class="flex flex-col shrink-0 ${rCls} py-3 px-4 border-b border-neutral-100 dark:border-neutral-800/60 transition-colors"><div class="flex items-center justify-between"><div class="flex items-center gap-2 w-full"><div class="flex-1 text-left"><p class="text-xl font-bold ${n?'text-blue-600 dark:text-blue-400':'text-neutral-900 dark:text-neutral-100'} leading-none">${c1}</p></div><div class="flex flex-col items-center justify-center shrink-0 px-4"><div class="w-8 h-[1px] bg-neutral-200 dark:bg-neutral-800 relative">${arrowIcon}</div></div><div class="flex-1 text-right"><p class="text-xl font-bold ${n?'text-blue-600 dark:text-blue-400':'text-neutral-900 dark:text-neutral-100'} leading-none">${c2}</p>${egB}</div></div></div></div>`;
+            }).join('');
+        }
+        function renderAll(){renderBanner();renderDesktopTable();renderMobileCards();highlightSelectedStop();}
 
-        function toggleCalendarDay() {
-            const eventsList = calendarEventsList;
-            eventsList.classList.add(showingToday ? 'slide-out-left' : 'slide-out-right');
+        const CBC_LAT = 24.4455;
+        const CBC_LNG = 54.6171;
+        const CBC_RADIUS_KM = 1.5;
+        const ACCOMMODATION_RADIUS_KM = 1.5;
+
+        const STOP_LOCATIONS = {
+            'Masdar 2': { lat: 24.4329, lng: 54.6161 }
+        };
+
+        const STOP_ALIASES = {
+            
+        };
+
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371;
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon/2) * Math.sin(dLon/2);
+            return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        }
+
+        function showLocationToast(text, isCustomText = false) {
+            const toast = document.getElementById('location-toast');
+            document.getElementById('location-toast-text').innerText = isCustomText ? text : `Detected location: ${text}`;
+            toast.classList.remove('opacity-0', '-translate-y-8');
+            toast.classList.add('opacity-100', 'translate-y-0');
             setTimeout(() => {
-                showingToday = !showingToday;
-                updateCalendarDate();
-                fetchCalendarEvents();
-                eventsList.classList.remove(showingToday ? 'slide-out-right' : 'slide-out-left');
-                eventsList.classList.add(showingToday ? 'slide-in-right' : 'slide-in-left');
-                setTimeout(() => {
-                    eventsList.classList.remove('slide-in-left', 'slide-in-right');
-                }, 500);
-            }, 500);
+                toast.classList.remove('opacity-100', 'translate-y-0');
+                toast.classList.add('opacity-0', '-translate-y-8');
+            }, 3500);
         }
 
-        function startAutoCycle() {
-            setInterval(toggleCalendarDay, 10000);
+        function updateHomeButtonUI() {
+            const btn = document.getElementById('btn-save-home');
+            if(!btn || !stopNamesMap[currentStop]) return;
+            const currentStopName = stopNamesMap[currentStop];
+            const savedStopName = localStorage.getItem('crewbus_custom_home_stop');
+            const baseClasses = "shrink-0 flex items-center justify-center p-1.5 sm:p-2.5 lg:p-2 rounded-md lg:rounded-lg border transition-all shadow-sm ";
+            
+            if(currentStopName === savedStopName) {
+                btn.className = baseClasses + "bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 border-indigo-200 dark:border-indigo-800/50 hover:bg-indigo-100 dark:hover:bg-indigo-900/50";
+                btn.title = "Current Home";
+                btn.innerHTML = `<svg class="w-4 h-4 sm:w-5 sm:h-5 lg:w-5 lg:h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/></svg>`;
+            } else {
+                btn.className = baseClasses + "bg-white dark:bg-neutral-900 text-neutral-400 dark:text-neutral-600 border-neutral-200 dark:border-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-800";
+                btn.title = "Save as Home";
+                btn.innerHTML = `<svg class="w-4 h-4 sm:w-5 sm:h-5 lg:w-5 lg:h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/></svg>`;
+            }
         }
 
-        initCalendarDraggable();
-        updateCalendarDate();
-        fetchCalendarEvents();
-        startAutoCycle();
+        function saveHomeLocation() {
+            if ("geolocation" in navigator) {
+                const btn = document.getElementById('btn-save-home');
+                btn.innerHTML = '<svg class="w-4 h-4 sm:w-5 sm:h-5 lg:w-5 lg:h-5 animate-spin" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>';
+                
+                navigator.geolocation.getCurrentPosition((pos) => {
+                    const stopName = stopNamesMap[currentStop];
+                    localStorage.setItem('crewbus_custom_home_lat', pos.coords.latitude);
+                    localStorage.setItem('crewbus_custom_home_lng', pos.coords.longitude);
+                    localStorage.setItem('crewbus_custom_home_stop', stopName);
+                    
+                    showLocationToast(`Saved Home: ${stopName}`, true);
+                    btn.innerHTML = '<svg class="w-4 h-4 sm:w-5 sm:h-5 lg:w-5 lg:h-5 text-green-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+                    setTimeout(() => updateHomeButtonUI(), 2000);
+                }, (err) => {
+                    alert("Could not get location. Please enable location permissions.");
+                    updateHomeButtonUI();
+                }, { enableHighAccuracy: true });
+            }
+        }
 
-        setInterval(() => {
-            console.log("Updating calendar...");
-            fetchCalendarEvents();
-        }, 300000);
+       function showScreensaver(trigger = 'manual-click') {
+            screensaverTrigger = trigger;
+            const ss = document.getElementById('screensaver');
+            ss.classList.remove('hidden');
+            ss.classList.add('flex');
+
+            if (!currentScreensaverScene) {
+                currentScreensaverScene = SCREENSAVER_SCENES[Math.floor(Math.random() * SCREENSAVER_SCENES.length)];
+                document.getElementById('screensaver-img').src = currentScreensaverScene.img;
+                document.getElementById('disco-ball-wrapper').classList.toggle('hidden', !currentScreensaverScene.disco);
+                document.getElementById('waves-wrapper').classList.toggle('hidden', !currentScreensaverScene.waves);
+                document.getElementById('vines-wrapper').classList.toggle('hidden', !currentScreensaverScene.vines);
+            }
+
+            const animateText = () => {
+                const container = document.getElementById('comic-text-container');
+                if (!container) return;
+                const words = currentScreensaverScene.text.split(' ');
+                let cCount = 0;
+                container.innerHTML = words.map((word, wIdx) => {
+                    return '<div class="flex">' + word.split('').map((char, cIdx) => {
+                        const rot = (cIdx % 2 === 0) ? '-4deg' : '4deg', topOffset = (cIdx % 2 === 0) ? '2px' : '-2px';
+                        let cStyle = '';
+                        if (currentScreensaverScene.disco && char.trim() !== '') {
+                            cStyle = `color: ${RAINBOW_COLORS[cCount % RAINBOW_COLORS.length]};`;
+                            cCount++;
+                        }
+                        return `<span class="comic-letter relative" style="animation-delay: ${(wIdx * 5 + cIdx) * 0.08}s; --rot: ${rot}; top: ${topOffset}; ${cStyle}">${char}</span>`;
+                    }).join('') + '</div>';
+                }).join('');
+
+                const subtext = document.getElementById('screensaver-subtext');
+                if (subtext) {
+                    subtext.style.animation = 'none'; // Remove previous animation
+                    void subtext.offsetWidth; // Force a DOM reflow to reset
+                    subtext.style.animation = 'subtextPopAndFade 5s ease-out'; // Apply the new self-contained loop
+                }
+            };
+
+            animateText();
+            if (screensaverAnimationInterval) clearInterval(screensaverAnimationInterval);
+            screensaverAnimationInterval = setInterval(animateText, 5000);
+        }
+
+        function hideScreensaver() {
+            if (screensaverAnimationInterval) clearInterval(screensaverAnimationInterval);
+            const ss = document.getElementById('screensaver');
+            ss.classList.add('hidden');
+            ss.classList.remove('flex');
+            currentScreensaverScene = null;
+            if (screensaverTrigger === 'auto-location') setRouteMode('manual');
+            screensaverTrigger = null;
+        }
+
+        function autoDetectDirection() {
+            if ("geolocation" in navigator) {
+                navigator.geolocation.getCurrentPosition((position) => {
+                    const userLat = position.coords.latitude;
+                    const userLng = position.coords.longitude;
+                    
+                    const distCBC = calculateDistance(userLat, userLng, CBC_LAT, CBC_LNG);
+
+                    // Outside Abu Dhabi (>60km from CBC) -> Show Screensaver
+                    if (distCBC > 60) {
+                        showScreensaver('auto-location');
+                        return;
+                    }
+
+                    // Inside Abu Dhabi -> Only switch automatically if 'Auto' is selected
+                    if (routeMode !== 'auto') return;
+
+                    if (distCBC <= CBC_RADIUS_KM) {
+                        setDirection('from_cbc');
+                        showLocationToast('CBC');
+                        return;
+                    }
+
+                    let nearestName = null;
+                    let minStopDist = Infinity;
+                    
+                    const cLat = localStorage.getItem('crewbus_custom_home_lat');
+                    const cLng = localStorage.getItem('crewbus_custom_home_lng');
+                    const cStop = localStorage.getItem('crewbus_custom_home_stop');
+                    if (cLat && cLng && cStop) {
+                        const distCustom = calculateDistance(userLat, userLng, parseFloat(cLat), parseFloat(cLng));
+                        if (distCustom < minStopDist) {
+                            minStopDist = distCustom;
+                            nearestName = cStop;
+                        }
+                    }
+
+                    for (const [stopName, coords] of Object.entries(STOP_LOCATIONS)) {
+                        if (coords.lat === 0 && coords.lng === 0) continue;
+                        const dist = calculateDistance(userLat, userLng, coords.lat, coords.lng);
+                        if (dist < minStopDist) {
+                            minStopDist = dist;
+                            nearestName = stopName;
+                        }
+                    }
+
+                    if (nearestName && minStopDist <= ACCOMMODATION_RADIUS_KM) {
+                        let targetName = STOP_ALIASES[nearestName] || nearestName;
+                        let foundRoute = null;
+                        let foundStopKey = null;
+                        
+                        for (const [rId, rData] of Object.entries(ROUTES)) {
+                            const sIdx = rData.stops.indexOf(targetName);
+                            if (sIdx > 0 && sIdx < rData.stops.length - 1) {
+                                foundRoute = rId;
+                                foundStopKey = `stop${sIdx}`;
+                                break;
+                            }
+                        }
+
+                        if (foundRoute && foundStopKey) {
+                            document.getElementById('route-dropdown').value = foundRoute;
+                            setDirection('to_cbc', true);
+                            switchRoute(foundRoute, foundStopKey);
+                            showLocationToast(targetName);
+                        } else {
+                            setDirection('to_cbc');
+                        }
+                    } else {
+                        setDirection('to_cbc');
+                    }
+                }, (err) => {
+                    console.warn("Location access denied or unavailable.", err);
+                }, { 
+                    timeout: 30000,
+                    maximumAge: 0,
+                    enableHighAccuracy: true
+                });
+            }
+        }
+
+        function updateConnectivityUI() {
+            const indicator = document.getElementById('connectivity-status');
+            if (navigator.onLine) {
+                indicator.innerHTML = '<span class="relative flex h-1 w-1 sm:h-2 sm:w-2 lg:h-1.5 lg:w-1.5"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75"></span><span class="relative inline-flex rounded-full h-1 w-1 sm:h-2 sm:w-2 lg:h-1.5 lg:w-1.5 bg-green-500"></span></span>Live';
+                indicator.className = "flex items-center gap-1 lg:gap-1.5 px-1.5 lg:px-2 py-0.5 rounded-full bg-green-100 dark:bg-green-950 text-green-600 dark:text-green-400 lg:text-green-700 border border-green-200 dark:border-green-900/50 text-[8px] sm:text-xs font-bold uppercase tracking-wider shrink-0 text-right";
+            } else {
+                indicator.innerHTML = '<svg class="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M18.364 5.636a9 9 0 010 12.728m0 0l-2.829-2.829m2.829 2.829L21 21M15.536 8.464a5 5 0 010 7.072m0 0l-2.829-2.829m-4.243 2.829a4.978 4.978 0 01-1.414-3.536m1.414 3.536l-2.829-2.829m-7.071-3.535a9 9 0 013.536-7.071m0 0L3 3m11.364 11.364L12 12m-2.121-2.121L7.05 7.05"></path></svg>Offline';
+                indicator.className = "flex items-center gap-1 lg:gap-1.5 px-1.5 lg:px-2 py-0.5 rounded-full bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-800 text-[8px] sm:text-xs font-bold uppercase tracking-wider shrink-0 text-right";
+            }
+        }
+
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(() => console.log('ServiceWorker registered'))
+                    .catch(err => console.log('ServiceWorker registration failed: ', err));
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded',()=>{
+            updateVH();window.addEventListener('resize',()=>{updateVH();renderRouteMap(!0);});
+            if(window.visualViewport)window.visualViewport.addEventListener('resize',()=>{updateVH();});
+            const hs=localStorage.getItem('crewbus_onboarding_seen'),sp=document.getElementById('splash-screen');
+            if(!hs){sp.classList.remove('hidden');document.getElementById('dismiss-splash').onclick=()=>{sp.classList.add('hidden');localStorage.setItem('crewbus_onboarding_seen','true');};}
+            document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'){updateVH();updateTime();}});
+            
+            window.addEventListener('online', updateConnectivityUI);
+            window.addEventListener('offline', updateConnectivityUI);
+            updateConnectivityUI();
+
+            const crewEmotions = [
+                { src: 'assets/crewtime.png', text: 'Worried you might miss the next bus?' },
+                { src: 'assets/crewsleepy.png', text: 'Exhausted and disoriented after that grueling ULR flight?' },
+                { src: 'assets/crewmad.png', text: 'Just watched your ride pull away right in front of you?' },
+                { src: 'assets/crewlost.png', text: 'Not sure which schedule fits your next briefing?' },
+                { src: 'assets/crewhappy.png', text: 'Why rush? Walk with ease and always know your next ride.' },
+                { src: 'assets/images/etihadbus.png', text: 'Install Etihad Bus', isIcon: true }
+            ];
+            const track = document.getElementById('carousel-track');
+            if (track) {
+                crewEmotions.forEach(emotion => {
+                    const slide = document.createElement('div');
+                    slide.className = 'carousel-slide';
+                    const imageContent = emotion.isIcon 
+                        ? `<div class="w-[160px] h-[160px] rounded-3xl shadow-[0_0_20px_rgba(59,130,246,0.4)] border-2 border-blue-400 dark:border-blue-500 overflow-hidden shrink-0 animate-pop"><img class="w-full h-full object-cover pointer-events-none select-none" draggable="false" src="${emotion.src}" alt="Install CrewBus" fetchpriority="high" decoding="async"></div>`
+                        : `<img class="carousel-image pointer-events-none select-none" draggable="false" src="${emotion.src}" alt="CrewBus Scenario" fetchpriority="high" decoding="async">`;
+                    const textClass = emotion.isIcon
+                        ? `text-lg sm:text-xl text-blue-600 dark:text-blue-400 font-black`
+                        : `text-sm sm:text-base text-neutral-600 dark:text-neutral-300 font-semibold`;
+                    slide.innerHTML = `
+                        <div class="image-wrapper">${imageContent}</div>
+                        <p class="${textClass} text-center leading-relaxed px-2 min-h-[48px] flex items-center justify-center">${emotion.text}</p>
+                    `;
+                    track.appendChild(slide);
+                });
+
+                const firstSlideClone = track.children[0].cloneNode(true);
+                track.appendChild(firstSlideClone);
+
+                let currentSlide = 0;
+                setInterval(() => {
+                    currentSlide++;
+                    track.style.transition = 'transform 0.6s cubic-bezier(0.25,1,0.5,1)';
+                    track.style.transform = `translateX(-${currentSlide * 100}%)`;
+
+                    if (currentSlide === crewEmotions.length) {
+                        setTimeout(() => {
+                            track.style.transition = 'none';
+                            currentSlide = 0;
+                            track.style.transform = 'translateX(0)';
+                        }, 600);
+                    }
+                }, 3000);
+            }
+
+            document.getElementById('btn-egate-planner').addEventListener('click', () => { document.getElementById('egate-modal').classList.remove('hidden'); });
+            document.getElementById('btn-close-egate').addEventListener('click', () => { document.getElementById('egate-modal').classList.add('hidden'); });
+            document.getElementById('btn-find-egate').addEventListener('click', () => {
+                const val = document.getElementById('egate-time-input').value; if(!val) return;
+                eGateTimeMinutes = timeToMinutes(val);
+                localStorage.setItem('crewbus_egate_time', eGateTimeMinutes);
+                setDirection('to_cbc'); 
+                document.getElementById('egate-modal').classList.add('hidden');
+                document.getElementById('egate-active-banner').classList.remove('hidden'); document.getElementById('egate-active-banner').classList.add('flex');
+                let h = Math.floor(eGateTimeMinutes/60), m = eGateTimeMinutes%60;
+                let endH = Math.floor((eGateTimeMinutes+60)/60)%24, endM = (eGateTimeMinutes+60)%60;
+                document.getElementById('egate-window-text').innerText = `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')} - ${endH.toString().padStart(2,'0')}:${endM.toString().padStart(2,'0')}`;
+                forceScroll = true; updateTime();
+            });
+            document.getElementById('btn-clear-egate').addEventListener('click', () => {
+                eGateTimeMinutes = null; localStorage.removeItem('crewbus_egate_time');
+                document.getElementById('egate-active-banner').classList.add('hidden'); document.getElementById('egate-active-banner').classList.remove('flex');
+                document.getElementById('egate-time-input').value = ''; forceScroll = true; updateTime();
+            });
+
+            document.getElementById('btn-from-eghq').addEventListener('click',()=>setDirection('from_cbc'));
+            document.getElementById('btn-to-eghq').addEventListener('click',()=>setDirection('to_cbc'));
+            document.getElementById('route-dropdown').addEventListener('change',(e)=>switchRoute(e.target.value));
+            document.getElementById('stop-selector').addEventListener('change',(e)=>setStop(e.target.value));
+            document.getElementById('btn-save-home').addEventListener('click',saveHomeLocation);
+            document.getElementById('btn-close-screensaver').addEventListener('click',hideScreensaver);
+            document.getElementById('btn-mode-auto').addEventListener('click',()=>setRouteMode('auto'));
+            document.getElementById('btn-mode-manual').addEventListener('click',()=>setRouteMode('manual'));
+            document.getElementById('btn-expand-fs').addEventListener('click',toggleFullscreen);
+            document.getElementById('btn-close-fs').addEventListener('click',toggleFullscreen);
+            document.getElementById('btn-center-schedule').addEventListener('click',scrollToFocusBus);
+            
+            let clockClicks = 0, clockTimer = null;
+            document.getElementById('clock-container').addEventListener('click', () => {
+                clockClicks++;
+                clearTimeout(clockTimer);
+                if (clockClicks >= 3) { clockClicks = 0; showScreensaver('manual-click'); }
+                else { clockTimer = setTimeout(() => { clockClicks = 0; }, 600); }
+            });
+
+            const sr=localStorage.getItem('etihad_saved_route')||'1',ss=localStorage.getItem('etihad_saved_stop')||'stop1',sd=localStorage.getItem('etihad_saved_direction')||'from_cbc';
+            setDirection(sd,!0);document.getElementById('route-dropdown').value=sr;switchRoute(sr,ss);
+            setRouteMode(routeMode);
+            if (routeMode !== 'auto') autoDetectDirection(); // Ensure layover checks still run in background
+            if(eGateTimeMinutes!==null){
+                document.getElementById('egate-active-banner').classList.remove('hidden'); document.getElementById('egate-active-banner').classList.add('flex');
+                let h = Math.floor(eGateTimeMinutes/60), m = eGateTimeMinutes%60;
+                let endH = Math.floor((eGateTimeMinutes+60)/60)%24, endM = (eGateTimeMinutes+60)%60;
+                document.getElementById('egate-window-text').innerText = `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')} - ${endH.toString().padStart(2,'0')}:${endM.toString().padStart(2,'0')}`;
+            }
+            setInterval(()=>{updateLiveCountdown();calculateActiveBuses();updateBusPositions();},1000);
+        });
     </script>
-    <svg class="dune" viewBox="0 0 1000 250" preserveAspectRatio="none">
-    <defs>
-        <linearGradient id="duneGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" style="stop-color:#f4e4bc;stop-opacity:1" />
-            <stop offset="50%" style="stop-color:#edc9af;stop-opacity:1" />
-            <stop offset="100%" style="stop-color:#d2a679;stop-opacity:0.8" />
-        </linearGradient>
-    </defs>
-    <path class="dune-gradient" d="
-    M0,250
-    C120,225 320,130 430,80
-    C540,50 680,110 860,190
-    C930,220 1000,235 1000,250
-    L1000,250
-    L0,250
-    Z" />
-</svg>
 </body>
 </html>
