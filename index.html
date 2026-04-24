@@ -651,12 +651,24 @@
                         }
                     }
 
-                    if (minHubDist > 60) {
+                    const distDubai = calculateDistance(userLat, userLng, STOP_LOCATIONS['Al Wasl Centre'].lat, STOP_LOCATIONS['Al Wasl Centre'].lng);
+
+                    if (minHubDist > 60 && distDubai > 60) {
                         showScreensaver('auto-location');
                         return;
                     }
 
                     if (routeMode !== 'auto') return;
+
+                    if (distDubai < 50 && distDubai < minHubDist) {
+                        if (activeRouteId !== "2") {
+                            document.getElementById('route-dropdown').value = "2";
+                            switchRoute("2", "stop1");
+                        }
+                        setDirection('to_hub');
+                        showLocationToast('Dubai');
+                        return;
+                    }
 
                     if (minHubDist <= HUB_RADIUS_KM) {
                         let foundRoute = null;
