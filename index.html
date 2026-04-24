@@ -129,7 +129,7 @@
                             <div class="flex-1 text-left">
                                 <label class="block text-[9px] sm:text-xs font-bold text-neutral-400 uppercase tracking-wider mb-1 sm:mb-2">Route</label>
                                 <div class="relative">
-                                    <select id="route-dropdown" class="w-full bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-neutral-900 dark:text-white text-[11px] sm:text-base rounded-md lg:rounded-lg focus:ring-blue-500 block py-1.5 px-2 sm:p-2.5 lg:py-2 lg:px-3 font-bold appearance-none cursor-pointer"><option value="1" selected>Masdar 2</option><option value="2">Al Wasl Center</option></select>
+                                    <select id="route-dropdown" class="w-full bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-neutral-900 dark:text-white text-[11px] sm:text-base rounded-md lg:rounded-lg focus:ring-blue-500 block py-1.5 px-2 sm:p-2.5 lg:py-2 lg:px-3 font-bold appearance-none cursor-pointer"><option value="1" selected>Masdar 2</option><option value="2">Etihad Shuttle (DXB - AUH)</option></select>
                                     <svg class="w-3.5 h-3.5 sm:w-5 sm:h-5 lg:w-5 lg:h-5 absolute right-2 lg:right-3 top-1/2 transform -translate-y-1/2 text-neutral-500 pointer-events-none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
                                 </div>
                             </div>
@@ -244,16 +244,18 @@
             "1": { 
                 name: "Masdar 2", 
                 hub: "CBC",
+                duration: 15,
                 stops: ['CBC (Dep)', 'Masdar 2', 'CBC (Arr)'], 
                 fromHub: ["00:00", "00:20", "00:40", "01:00", "01:30", "02:00", "02:30", "03:00", "03:30", "04:00", "04:30", "05:00", "05:30", "06:00", "06:30", "07:00", "07:20", "07:40", "08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:20", "19:40", "20:00", "20:20", "20:40", "21:00", "21:20", "21:40", "22:00", "22:20", "22:40", "23:00", "23:30"],
                 toHub: ["00:00", "00:20", "00:40", "01:00", "01:30", "02:00", "02:30", "03:00", "03:30", "04:00", "04:30", "05:00", "05:30", "06:00", "06:20", "06:40", "07:00", "07:30", "08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "11:50", "12:10", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:20", "18:40", "19:00", "19:20", "19:40", "20:00", "20:30", "21:00", "21:30", "22:00", "22:30", "23:00", "23:20", "23:40"]
             },
             "2": {
-                name: "Al Wasl Center",
+                name: "Etihad Shuttle (DXB - AUH)",
                 hub: "AUH",
-                stops: ['AUH (Dep)', 'Al Wasl Center', 'AUH (Arr)'],
-                fromHub: ["00:00", "02:00", "04:00"], 
-                toHub: ["01:00", "03:00", "05:00"] 
+                duration: 75,
+                stops: ['AUH (Dep)', 'Al Wasl Centre', 'AUH (Arr)'],
+                fromHub: ["01:10", "02:45", "08:25", "09:15", "14:15", "14:45", "20:50", "21:40"], 
+                toHub: ["03:55", "05:00", "10:00", "10:20", "16:10", "17:00", "18:45", "22:00", "22:30"] 
             }
         };
         let activeRouteId="1",stopsData=[],schedule=[],stopNamesMap={},stopIndices={},currentDirection='from_hub',currentStop='stop1',nextTripData={id:null,minutes:0,departs:'',arrives:''},nextTripTargetDate=null,activeBuses=[],forceScroll=!0,lastAutoScrolledId=null;
@@ -286,7 +288,8 @@
 
             const timesList = currentDirection === 'from_hub' ? rData.fromHub : rData.toHub;
             schedule = timesList.map((time, index) => {
-                let arrStr = padTime(timeToMinutes(time) + 15);
+                let duration = rData.duration || 15;
+                let arrStr = padTime(timeToMinutes(time) + duration);
                 let o = { id: index };
                 if (currentDirection === 'from_hub') {
                     o.departs = time; o.stop1 = arrStr; o.arrives = arrStr; o.times = [time, arrStr, arrStr];
@@ -517,7 +520,7 @@
 
         const STOP_LOCATIONS = {
             'Masdar 2': { lat: 24.432712430556133, lng: 54.621180323322946 },
-            'Al Wasl Center': { lat: 25.19570224764426, lng: 55.262119709843724 }
+            'Al Wasl Centre': { lat: 25.19570224764426, lng: 55.262119709843724 }
         };
 
         const STOP_ALIASES = {
