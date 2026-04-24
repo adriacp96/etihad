@@ -1,4 +1,4 @@
-const CACHE_NAME = 'etihadbus-v4';
+const CACHE_NAME = 'etihadbus-v5';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
