@@ -1,4 +1,4 @@
-const CACHE_NAME = 'etihadbus-v1';
+const CACHE_NAME = 'etihadbus-v3';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -14,11 +14,7 @@ const ASSETS_TO_CACHE = [
   './assets/crewmad.png',
   './assets/crewlost.png',
   './assets/crewhappy.png',
-  './assets/crewsun.png',
-  './assets/crewdrink.png',
-  './assets/crewuntie.png',
-  './assets/crewduck.png',
-  './assets/crewexplorer.png'
+  './assets/images/crewtired.png'
 ];
 
 self.addEventListener('install', (event) => {
