@@ -1,4 +1,4 @@
-const CACHE_NAME = 'etihadbus-v3';
+const CACHE_NAME = 'etihadbus-v4';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -9,11 +9,6 @@ const ASSETS_TO_CACHE = [
   './assets/fonts/etihad-altis-book-book.ttf',
   './assets/images/etihadbus.png',
   './assets/images/etihadlogo.svg',
-  './assets/crewtime.png',
-  './assets/crewsleepy.png',
-  './assets/crewmad.png',
-  './assets/crewlost.png',
-  './assets/crewhappy.png',
   './assets/images/crewtired.png'
 ];
 
